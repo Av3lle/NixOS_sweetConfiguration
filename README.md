@@ -54,7 +54,7 @@
 
 ---
 
-## 🖼 Превью рабочего стола
+## 🩷 Превью рабочего стола
 
 <p align="center">
   <img src="./assets/preview1.png" alt="Desktop preview" width="100%" />
