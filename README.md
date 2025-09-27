@@ -1,7 +1,7 @@
 <div align="center"><img src="assets/logo.png" width="300px"></div>
 
 <h1 align="center">✨ NixOS Sweet Configuration ✨</h1>
-<p align="center">
+<p align="center" style="text-decoration:none;">
 	<a href="https://github.com/Av3lle/NixOS_sweetConfiguration" style="text-decoration:none;">
 		<img alt="Av3lle" src="https://img.shields.io/github/stars/Av3lle/NixOS_sweetConfiguration?label=Stars&color=FF3899&labelColor=303446&style=flat&logo=starship&logoColor=FF3899">
 	</a>
@@ -13,7 +13,7 @@
 	</a>
 </p>
 
-Моя конфигурация NixOS + Home Manager, настроенная под личные предпочтения и эстетические вкусы.
+Моя конфигурация NixOS + Home Manager, которая будет постепенно улучшаться и настроенная под личные предпочтения, и эстетические вкусы.
 
 ---
 
@@ -39,44 +39,16 @@
 ---
 
 ## 📂 Структура репозитория
-.
-├── flake.nix
-├── configuration.nix
-├── lib
-│   ├── default.nix
-│   ├── devShells.nix
-│   ├── packages.nix
-│   └── sweet
-│       ├── imports.nix
-│       ├── mkHome.nix
-│       ├── mkMachine.nix
-│       └── options.nix
-├── disko
-│   ├── pc.nix
-│   └── server.nix
-├── hosts
-│   ├── default.nix
-│   └── template
-│       ├── default.nix
-│       ├── hardware-configuration.nix
-│       └── system
-│           └── packages.nix
-├── users
-│   ├── default.nix
-│   └── username
-│       ├── default.nix
-│       ├── packages.nix
-├── derivations
-│   ├── default
-│   │   ├── default.nix
-├── modules
-│   ├── example.nix
-│   ├── home
-│   │   ├── example
-│   ├── hosts
-│   │   ├── example
-├── secrets
-    └── sops.nix
+
+- [flake.nix](flake.nix) – основной flake-файл  
+- [configuration.nix](configuration.nix) – параметры для хоста
+- [lib](lib/) – самописная библиотека 
+- [hosts](hosts/) – каталог с хостами
+- [home](home/) - каталог с пользователями
+- [modules](modules/) - все модули
+	- [hosts](modules/hosts/) - модули предназначенные для хоста
+	- [home](modules/home/) - модули предназначенные для пользователя
+- [derivations](derivations/) - собственные пакеты
 
 > Путь и названия могут немного отличаться, т.к. их слишком много.
 
