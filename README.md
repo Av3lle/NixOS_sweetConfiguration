@@ -3,13 +3,13 @@
 <h1 align="center">✨ NixOS Sweet Configuration ✨</h1>
 <p align="center" style="text-decoration:none;">
 	<a href="https://github.com/Av3lle/NixOS_sweetConfiguration" style="text-decoration:none;">
-		<img alt="Av3lle" src="https://img.shields.io/github/stars/Av3lle/NixOS_sweetConfiguration?label=Stars&color=FF3899&labelColor=303446&style=flat&logo=starship&logoColor=FF3899">
+		<img alt="Av3lle" src="https://img.shields.io/github/stars/Av3lle/NixOS_sweetConfiguration?label=Stars&color=FF3899&labelColor=303446&style=flat&logo=starship&logoColor=FF3899" />
 	</a>
 	<a href="https://github.com/NixOS/nixpkgs/tree/nixos-25.05" style="text-decoration:none;">
-		<img alt="NixOS" src="https://img.shields.io/badge/NixOS-stable-blue.svg?style=flat&logo=nixos&logoColor=FE78B0&colorA=24273A&colorB=FE78B0">
+		<img alt="NixOS" src="https://img.shields.io/badge/NixOS-stable-blue.svg?style=flat&logo=nixos&logoColor=FE78B0&colorA=24273A&colorB=FE78B0" />
 	</a>
 	<a href="https://wiki.nixos.org/wiki/Flakes" style="text-decoration:none;">
-		<img alt="Flake" src="https://img.shields.io/static/v1?label=Nix%20Flake&message=Check&style=flat&logo=nixos&colorA=24273A&colorB=FE1A88&logoColor=FE1A88">
+		<img alt="Flake" src="https://img.shields.io/static/v1?label=Nix%20Flake&message=Check&style=flat&logo=nixos&colorA=24273A&colorB=FE1A88&logoColor=FE1A88" />
 	</a>
 </p>
 
