@@ -29,7 +29,6 @@ inputs@{
                 _prev
                 self
                 ;
-            # branch = host.system.branch or "stable";
         };
 
         devShells = host: import ./devShells.nix {

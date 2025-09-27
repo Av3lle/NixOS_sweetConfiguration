@@ -4,15 +4,8 @@ nixpkgs,
 _unstable,
 _prev,
 self,
-# branch ? "stable",
 ...
 }: let
-    # selectedNixpkgs = {
-        # stable = nixpkgs;
-        # unstable = _unstable;
-        # prev = _prev;
-    # }.${branch} or nixpkgs;
-    
     overlays = {
         unstable = final: prev: {
             _unstable = import _unstable {
@@ -42,7 +35,6 @@ self,
             (builtins.readDir (self + "/derivations"));
     };
     pkgs = import nixpkgs {
-    # pkgs = import selectedNixpkgs {
         inherit
             system
             ;
