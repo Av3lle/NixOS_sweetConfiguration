@@ -1,12 +1,17 @@
 <div align="center"><img src="assets/logo.png" width="300px"></div>
 
 <h1 align="center">✨ NixOS Sweet Configuration ✨</h1>
-<div align="center">
-![stars](https://img.shields.io/github/stars/Av3lle/NixOS_sweetConfiguration?label=Stars&color=FF3899&labelColor=303446&style=flat&logo=starship&logoColor=FF3899)
-![nixos](https://img.shields.io/badge/NixOS-stable-blue.svg?style=flat&logo=nixos&logoColor=FE78B0&colorA=24273A&colorB=FE78B0)
-![flake check](https://img.shields.io/static/v1?label=Nix%20Flake&message=Check&style=flat&logo=nixos&colorA=24273A&colorB=FE1A88&logoColor=FE1A88)
-</div>
-
+<p align="center">
+	<a href="https://github.com/Av3lle/NixOS_sweetConfiguration">
+		<img alt="Av3lle" src="https://img.shields.io/github/stars/Av3lle/NixOS_sweetConfiguration?label=Stars&color=FF3899&labelColor=303446&style=flat&logo=starship&logoColor=FF3899">
+	</a>
+	<a href="https://github.com/NixOS/nixpkgs/tree/nixos-25.05">
+		<img alt="NixOS" src="https://img.shields.io/badge/NixOS-stable-blue.svg?style=flat&logo=nixos&logoColor=FE78B0&colorA=24273A&colorB=FE78B0">
+	</a>
+	<a href="https://wiki.nixos.org/wiki/Flakes">
+		<img alt="Flake" src="https://img.shields.io/static/v1?label=Nix%20Flake&message=Check&style=flat&logo=nixos&colorA=24273A&colorB=FE1A88&logoColor=FE1A88">
+	</a>
+</p>
 Моя конфигурация NixOS + Home Manager, настроенная под личные предпочтения и эстетические вкусы.
 
 ---
