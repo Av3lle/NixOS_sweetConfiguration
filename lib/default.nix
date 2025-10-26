@@ -1,8 +1,8 @@
 inputs@{
     self,
-    nixpkgs,
-    _unstable,
-    _prev,
+    nixpkgs-stable ? null,
+    nixpkgs-unstable ? null,
+    nixpkgs-prev ? null,
     home-manager,
     ...
 }:
@@ -15,29 +15,58 @@ inputs@{
                 ;
         };
 
+        hosts = import ../configuration.nix;
+
         withRoot = paths: map (path: self + "/${path}") paths;
 
-        options = import ./sweet/options.nix { inherit (nixpkgs) lib; };
+        defaultLib = nixpkgs-stable.lib or null;
+        options = import ./sweet/options.nix { lib = defaultLib; };
+        _imports = import ./sweet/imports.nix { lib = defaultLib; };
 
-        _imports = import ./sweet/imports.nix { inherit (nixpkgs) lib; };
-        
-        packages = host: import ./packages.nix {
+        packages = host: let
+            branchToInput = {
+                "stable" = nixpkgs-stable;
+                "prev" = nixpkgs-prev;
+                "unstable" = nixpkgs-unstable;
+            };
+            selectedNixpkgs = branchToInput.${host.branch or "stable"} or nixpkgs-stable;
+        in import ./packages.nix {
             system = host.system.platform or "x86_64-linux";
+            lib = selectedNixpkgs.lib;
             inherit
-                nixpkgs
-                _unstable
-                _prev
+                selectedNixpkgs
+                nixpkgs-stable
+                nixpkgs-unstable
+                nixpkgs-prev
                 self
                 ;
         };
-
+    
         devShells = host: import ./devShells.nix {
             pkgs = (packages host).pkgs;
         };
 
-        hosts = import ../configuration.nix;
+        mkContext = host: let
+            branchToInput = {
+                "stable" = nixpkgs-stable;
+                "prev" = nixpkgs-prev;
+                "unstable" = nixpkgs-unstable;
+            };
+            selectedInput = branchToInput.${host.branch or "stable"} or nixpkgs-stable;
+            pkgsForHost = (packages host).pkgs;
+            system = host.system.platform or "x86_64-linux";
+        in {
+            lib = selectedInput.lib;
+            inherit
+                selectedInput
+                pkgsForHost
+                system
+                ;
+        };
 
-        mkMachine = host: import ./sweet/mkMachine.nix {
+        mkMachine = host: let
+            context = mkContext host;
+        in import ./sweet/mkMachine {
             inherit
                 self
                 extraAttrs
@@ -45,12 +74,13 @@ inputs@{
                 options
                 _imports
                 ;
-            inherit (nixpkgs) lib;
-            pkgs = (packages host).pkgs;
-            
+            inherit (context) lib;
+            pkgs = context.pkgsForHost;
         };
 
-        mkHome = host: import ./sweet/mkHome.nix {
+        mkHome = host: let
+            context = mkContext host;
+        in import ./sweet/mkHome {
             inherit
                 self
                 extraAttrs
@@ -59,10 +89,9 @@ inputs@{
                 _imports
                 ;
             inherit (home-manager) lib;
-            inherit (nixpkgs.lib) mkDefault;
-            pkgs = (packages host).pkgs;
+            inherit (context.lib) mkDefault;
+            pkgs = context.pkgsForHost;
         };
-
     in {
 
         nixosConfigurations = builtins.mapAttrs (machine: config: let
@@ -90,4 +119,4 @@ inputs@{
                 ${system} = (acc.${system} or {}) // shells;
             }) {} (builtins.attrNames hosts);
         in shellsBySystem;
-}
+    }

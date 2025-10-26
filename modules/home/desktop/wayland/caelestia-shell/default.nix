@@ -30,15 +30,24 @@ in {
                     configLoaded = false;
                     capsLockChanged = false;
                     numLockChanged = false;
+                    kbLayoutChanged = false;
                 };
                 
-                bar.status = {
-                    showBattery = false;
-                    showNetwork = false;
-                    showBluetooth = false;
+                bar = {
+                    status = {
+                        showBattery = false;
+                        showNetwork = false;
+                        showBluetooth = false;
 
-                    showKbLayout = true;
-                    showAudio = true;
+                        showKbLayout = true;
+                        showAudio = true;
+                    };
+                    scrollActions = {
+                        brightness = true;
+                        workspaces = true;
+                        volume = true;
+                    };
+                    
                 };
 
                 # launcher = {
@@ -63,7 +72,7 @@ in {
                 session.dragThreshold = 5;
                 sidebar.dragThreshold = 5;
                 
-                paths.wallpaperDir = "${self}/.wallpaper/";
+                paths.wallpaperDir = "~/Pictures/wallpaper/";
             };
             cli = {
                 enable = true;

@@ -2,7 +2,7 @@
   wayland.windowManager.hyprland = {
     settings = {
       exec-once = [
-        "sleep 2;AyuGram"
+        "sleep 2;Telegram"
         "sleep 2;vesktop --disable-features=WebRtcAllowInputVolumeAdjustment"
       ];
 
@@ -132,12 +132,6 @@
         "size 505 979,class:^(org.telegram.desktop)$"
         "move 1395 33,class:^(org.telegram.desktop)$"
         "float,class:^(org.telegram.desktop)$"
-
-        "workspace 8 silent,class:^(com.ayugram.desktop)$"
-        "size 545 1036,class:^(com.ayugram.desktop)$"
-        # "size 505 979,class:^(com.ayugram.desktop)$"
-        # "move 1395 33,class:^(com.ayugram.desktop)$"
-        # "float,class:^(com.ayugram.desktop)$"
 
         "workspace 8 silent,class:^(vesktop)$"
         "size 1267 1036,class:^(vesktop)$"

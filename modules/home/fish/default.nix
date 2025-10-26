@@ -28,6 +28,26 @@ in {
             };
         };
 
+        programs.tmux = {
+            enable = true;
+
+            terminal = "screen-256color";
+
+            baseIndex = 1;
+            keyMode = "vi";
+            prefix = "C-a";
+
+            extraConfig = "
+                unbind r
+                bind r source-file ${config.home.homeDirectory}/.config/tmux/tmux.conf
+
+                unbind %
+                bind h split-window -h
+                bind v split-window -v
+                
+            ";
+        };
+
         programs.starship = {
             enable = true;
             settings = {

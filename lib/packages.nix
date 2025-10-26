@@ -1,31 +1,60 @@
 {
+lib,
 system,
-nixpkgs,
-_unstable,
-_prev,
+selectedNixpkgs,
+nixpkgs-stable ? null,
+nixpkgs-unstable ? null,
+nixpkgs-prev ? null,
 self,
 ...
 }: let
     overlays = {
-        unstable = final: prev: {
-            _unstable = import _unstable {
-                inherit
-                    system
-                    ;
-                config.allowUnfree = true;
-            };
+        stable = final: prev: let
+            stableInput = if nixpkgs-stable != null then
+                nixpkgs-stable else selectedNixpkgs;
+            stablePkgs = if selectedNixpkgs != stableInput then
+                import stableInput {
+                    config.allowUnfree = true;
+                    inherit
+                        system
+                        ;
+                }
+            else final;
+        in {
+            _stable = stablePkgs;
         };
-        prev = final: prev: {
-            _24 = import _prev {
-                inherit
+        
+        unstable = final: prev: let
+            unstableInput = if nixpkgs-unstable != null then
+                nixpkgs-unstable else selectedNixpkgs;
+            unstablePkgs = if selectedNixpkgs != unstableInput then
+                import unstableInput {
+                    config.allowUnfree = true;
+                    inherit
+                        system
+                        ;
+                }
+            else final;
+        in {
+            _unstable = unstablePkgs;
+        };
+    
+        prev = final: prev: let
+            prevInput = if nixpkgs-prev != null then
+                nixpkgs-prev else selectedNixpkgs;
+            prevPkgs = if selectedNixpkgs != prevInput then
+                import prevInput {
+                    config.allowUnfree = true;
+                    inherit
                     system
-                    ;
-                config.allowUnfree = true;
-            };
+                    ; }
+            else final;
+        in {
+            _24 = prevPkgs;
         };
 
         customPackages = final: prev:
-            nixpkgs.lib.mapAttrs
+            prev.lib.mapAttrs
             (name: type:
                 if type == "directory" then
                     final.callPackage (self + "/derivations/${name}/default.nix") {}
@@ -34,15 +63,17 @@ self,
             )
             (builtins.readDir (self + "/derivations"));
     };
-    pkgs = import nixpkgs {
+    overlayList = [
+        overlays.customPackages
+    ] ++ lib.optionals (selectedNixpkgs != nixpkgs-stable) [ overlays.stable ]
+      ++ lib.optionals (selectedNixpkgs != nixpkgs-unstable) [ overlays.unstable ]
+      ++ lib.optionals (selectedNixpkgs != nixpkgs-prev) [ overlays.prev ];
+    
+    pkgs = import selectedNixpkgs {
         inherit
             system
             ;
-        overlays = [
-            overlays.unstable
-            overlays.prev
-            overlays.customPackages
-        ];
+        overlays = overlayList;
         config.allowUnfree = true;
     };
 in {
