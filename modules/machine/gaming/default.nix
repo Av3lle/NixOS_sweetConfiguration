@@ -100,7 +100,7 @@ in {
                 '';
             });
         in {
-            systemPackages = [ customMangohud pkgs.protonplus];
+            systemPackages = [ customMangohud pkgs.protonplus ];
             sessionVariables = {
                 MANGOHUD_CONFIGFILE = "${mangohudConfig}";
             };

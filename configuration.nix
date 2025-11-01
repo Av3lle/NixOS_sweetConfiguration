@@ -1,39 +1,49 @@
 {
-    pc = {
-        system = {
-            userName = "avelle";
-            platform = "x86_64-linux";
-        };
-        paths = {
-            flakeDir = "/home/avelle/.config/nixos";
-        };
+  pc = {
+    branch = "stable";
+    system = {
+      userName = "avelle";
+      platform = "x86_64-linux";
+
+      defaultLocale = "ru_RU.UTF-8";
+      timeZone = "Europe/Moscow";
+
     };
-
-    server = {
-        system = {
-            hostName = "nixos-server";
-            userName = "avelle";
-            platform = "x86_64-linux";
-
-            isServer = true;
-        };
-        paths = {
-            flakeDir = "/home/avelle/.config/nixos";
-        };
+    paths = {
+      flakeDir = "/home/avelle/.config/nixos";
     };
+  };
 
-    laptop = {
-        system = {
-            hostName = "nixos-laptop";
-            userName = "avelle";
-            version = "25.05";
-            platform = "x86_64-linux";
+  server = {
+    system = {
+      hostName = "nixos-server";
+      userName = "avelle";
+      platform = "x86_64-linux";
 
-            isLaptop = true;
-        };
-        paths = {
-            flakeDir = "/home/avelle/.config/nixos";
-        };
+      timeZone = "Europe/Moscow";
+
+      isServer = true;
     };
-    
+    paths = {
+      flakeDir = "/home/avelle/.config/nixos";
+    };
+  };
+
+  laptop = {
+    system = {
+      hostName = "nixos-laptop";
+      userName = "avelle";
+      version = "25.05";
+      platform = "x86_64-linux";
+
+      defaultLocale = "ru_RU.UTF-8";
+      timeZone = "Europe/Moscow";
+
+      isLaptop = true;
+    };
+    paths = {
+      flakeDir = "/home/avelle/.config/nixos";
+    };
+  };
+
 }

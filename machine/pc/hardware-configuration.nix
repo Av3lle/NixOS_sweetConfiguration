@@ -44,7 +44,7 @@
     device = "192.168.1.2:/mnt/files/nfs";
     fsType = "nfs";
     options = [
-      "noauto"
+      # "noauto"
       "x-systemd.idle-timeout=600"
       "users"
       "suid"

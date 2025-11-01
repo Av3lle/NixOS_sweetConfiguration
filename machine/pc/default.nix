@@ -17,13 +17,13 @@
 
     system.modulesTree =
         let
-            kernel = pkgs.linuxPackages_cachyos-lto.kernel;
+            kernel = pkgs.linuxPackages_cachyos.kernel;
         in
 
         [ (lib.getOutput "modules" kernel) ];
   
     boot = {
-        kernelPackages = pkgs.linuxPackages_cachyos-lto;
+        kernelPackages = pkgs.linuxPackages_cachyos;
         kernelModules = [ "ntsync" ];
     }; 
 
