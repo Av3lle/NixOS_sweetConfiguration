@@ -44,8 +44,9 @@
     device = "192.168.1.2:/mnt/files/nfs";
     fsType = "nfs";
     options = [
-      # "noauto"
-      "x-systemd.idle-timeout=600"
+      "x-systemd.automount"
+      "noauto"
+      # "x-systemd.idle-timeout=600"
       "users"
       "suid"
       "x-gvfs-show"

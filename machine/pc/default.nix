@@ -1,10 +1,10 @@
 {
-  config,
-  lib,
-  system,
-  pkgs,
-  _imports,
-  ...
+    config,
+    lib,
+    system,
+    pkgs,
+    _imports,
+    ...
 }:
 {
     imports = [
@@ -15,19 +15,37 @@
         exclusions = [ "quickshell.nix" ];
     });
 
-    system.modulesTree =
-        let
-            kernel = pkgs.linuxPackages_cachyos.kernel;
-        in
+    # system.modulesTree =
+        # let
+            # kernel = pkgs.linuxPackages_cachyos.kernel;
+        # in
+        # [ (lib.getOutput "modules" kernel) ];
 
-        [ (lib.getOutput "modules" kernel) ];
-  
+    # specialisation = {
+        # default.configuration = {
+            # boot.kernelPackages = pkgs.linuxPackages_xanmod;
+        # };
+        # vanillaKernel.configuration = {
+            # boot.kernelPackages = pkgs.linuxPackages_latest;
+        # };
+    # };
+   
     boot = {
-        kernelPackages = pkgs.linuxPackages_cachyos;
+        # kernelPackages =
+        # pkgs.linuxPackages_xanmod;
+        # pkgs.linuxPackages_cachyos;
         kernelModules = [ "ntsync" ];
-    }; 
+    };
+
+    hardware.ksm.enable = true;
+
+    # Winboat
+    virtualisation.docker.enable = true;
+    # users.extraGroups.docker.members = [ "username-with-access-to-socket" ];
+    
 
     module = {
+        # enable = true;
         hardware = {
             cpu.amd = {
                 enable = true;
@@ -49,9 +67,10 @@
             fstrim.enable = true;
         };
         firewall = {
-            enable = true;
-            tcpPorts = [ 25565 ];
-            udpPorts = [ 25565 ];
+            enable = false;
+            allowForward = true;
+            tcpPorts = [ 25565 67 53 9997 ];
+            udpPorts = [ 25565 67 53 ];
         };
         ssh = {
             enable = true;
@@ -73,23 +92,34 @@
             lsfg.enable = true;
         };
 
+        waydroid.enable = true;
         stylix.enable = false;
-        appimage.enable = true;
+        # appimage.enable = lib.mkDefault true;
         zapret.enable = false;
     };
 
-    services.xserver.windowManager.openbox.enable = true;
-
-    services.ananicy = {
-        enable = true;
-        package = pkgs.ananicy-cpp;
-        rulesProvider = pkgs.ananicy-rules-cachyos;
+    virtualisation.virtualbox.host.enable = true;
+    
+    services = {
+        xserver.windowManager.openbox.enable = true;
+        ananicy = {
+            enable = true;
+            package = pkgs.ananicy-cpp;
+            rulesProvider = pkgs.ananicy-rules-cachyos;
+        };
+        prometheus.exporters.smartctl = {
+            enable = true;
+            port = 9997;
+            openFirewall = true;
+            maxInterval = "360m";
+        };
+        envfs.enable = true;
     };
 
     users = {
         users.${system.userName} = {
             hashedPasswordFile = config.sops.secrets."pc/user/password".path;
-            extraGroups = [ "inputs" ];
+            extraGroups = [ "docker" ];
             shell = pkgs.fish;
         };
     };

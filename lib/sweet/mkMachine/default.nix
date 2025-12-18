@@ -6,6 +6,7 @@
     _imports,
     pkgs,
     options,
+    inputs,
     ...
 }:
 {
@@ -20,8 +21,8 @@ let
         platform = "x86_64-linux";
         version = "25.05";
 
-        defaultLocale = "";
-        timeZone = "";
+        defaultLocale = "en_US.UTF-8";
+        timeZone = "null";
 
         isServer = false;
         isLaptop = false;
@@ -48,6 +49,9 @@ lib.nixosSystem {
     ++ (_imports.allDefaultSubdir {
         dir = (self) + /modules/machine;
     })
+    # ++ (_imports.allDefaultSubdir {
+        # dir = (self) + /modules/test;
+    # })
     ++ (withRoot [ "machine/${machine}" ])
     ++ (lib.optional (!mergedSystem.isServer)
            extraAttrs.inputs.home-manager.nixosModules.default

@@ -1,4 +1,10 @@
-{ system, pkgs, _imports, ... }: {
+{
+    system,
+    pkgs,
+    _imports,
+    ...
+}:
+{
     imports = [
         ./hardware-configuration.nix
     ] ++ (_imports.allDefaultDir {
@@ -6,20 +12,14 @@
     });
 
     module = {
-        # All modules are located on the path ${self}/modules/...
-
-        boot = {
-            enable = true;
-        };
-    
-       
+        # All modules are located on the path ${self}/modules/...       
         ssh = {
             enable = true;
             fail2ban.enable = true;
             only-client = false;
         };
 
-        netbird.enable = true;
+        netbird.enable = false;
 
         homelab = {
             enable = true;
@@ -35,11 +35,14 @@
                 enable = true;
             };
 
-            vaultwarden.enable = true;
-
             immich = {
                 enable = true;
                 mediaLocation = "/mnt/files/immich";
+            };
+
+            monitoring = {
+                grafana.enable = true;
+                prometheus.enable = true;
             };
         };
 

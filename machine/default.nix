@@ -1,46 +1,13 @@
 # Here are the settings that apply
 # to all hosts without exception.
 
-{ pkgs, config, ... }: {
-    # nix store settings
-    # nix = {
-    #     settings = {
-    #         auto-optimise-store = true;
-    #         experimental-features = [ "nix-command" "flakes" ];
-    #         substituters = [
-    #             "https://cache.nixos.org"
-    #             "https://nix-community.cachix.org"
-    #             "https://nixos-bunny-proxy.cofob.dev/"
-    #             "https://nixos.tvix.store/"
-    #             "https://nixos-cache-proxy.cofob.dev/"
-    #         ];
-    #     };
-    #     optimise.automatic = true;
-    #     gc = {
-    #         automatic = true;
-    #         dates = "weekly";
-    #         options = "--delete-older-than 3d";
-    #     };
-    # };
-
-    # Date time and locale
-    # time.timeZone = "Europe/Moscow";
-    # i18n = {
-    #     defaultLocale = "ru_RU.UTF-8";
-    #     extraLocaleSettings = { LANG = "ru_RU.UTF-8"; };
-    # };
-
-    # TTY settings
-    # console = {
-    #     earlySetup = true;
-    #     font = "${pkgs.terminus_font}/share/consolefonts/ter-c20b.psf.gz";
-    #     packages = with pkgs; [ terminus_font ];
-    #     keyMap = "us";
-    # };
-    
-
+{
+    pkgs,
+    config,
+    ...
+}:
+{
     # Default services
-    # systemd.services.NetworkManager-wait-online.enable = false;
     services = {
         xserver = {
             enable = true;
@@ -51,21 +18,12 @@
                 options = "grp:alt_shift_toggle, grp_led:shift, grp:switch";
             };
         };
-        
-        # libinput = {
-        #     enable = true;
-        #     mouse.accelProfile = "flat";
-        # };
-
-        # devmon.enable = true;
-        # gvfs.enable = true; 
-        # udisks2.enable = true;
     };
     
 
     # Remove sudo and add doas
     security = {
-        sudo = { enable = true; };
+        sudo.enable = true;
         doas = {
             enable = true;
             extraConfig = ''
@@ -80,7 +38,7 @@
         packages = with pkgs; [
             noto-fonts
             noto-fonts-cjk-sans
-            noto-fonts-emoji
+            noto-fonts-color-emoji
             liberation_ttf
             fira-code
             fira-code-symbols
@@ -100,7 +58,6 @@
         systemPackages = (with pkgs; [
             git
             gawk
-            glxinfo
             inxi
             nixos-icons
             killall

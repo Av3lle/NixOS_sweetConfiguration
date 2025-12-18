@@ -38,6 +38,7 @@ in {
             recommendedOptimisation = true;
             recommendedProxySettings = true;
             recommendedTlsSettings = true;
+            clientMaxBodySize = "30m";
         };
     };
 }

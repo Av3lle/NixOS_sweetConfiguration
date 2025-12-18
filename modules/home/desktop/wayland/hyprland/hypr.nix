@@ -1,8 +1,12 @@
-{ config, ... }: {
+{
+  config,
+  ...
+}:
+{
   wayland.windowManager.hyprland = {
     settings = {
       exec-once = [
-        "sleep 2;Telegram"
+        "Telegram"
         "sleep 2;vesktop --disable-features=WebRtcAllowInputVolumeAdjustment"
       ];
 
@@ -12,8 +16,8 @@
       "$browser" = "zen-twilight";
 
       monitor = [
-        "HDMI-A-1,preferred,0x0,auto"
-        "DP-1,1920x1080@60,auto-up,1"
+        "DP-1,preferred,0x0,auto"
+        "HDMI-A-1,1920x1080@60,auto-up,1"
         "Unknown-1,disable"
       ];
 
@@ -47,7 +51,6 @@
         gaps_in = 5;
         gaps_out = 10;
         border_size = 2;
-        # "col.active_border" = "rgba(d3c6aaff)";
         "col.active_border" = "rgba(ffffffff)";
         "col.inactive_border" = "rgba(1e2327fa)";
 
@@ -59,10 +62,9 @@
       };
 
       decoration = {
-        # rounding = 5;
         rounding = 19;
         inactive_opacity = 0.8;
-    
+
         blur = {
           enabled = true;
           size = 6;
@@ -75,127 +77,80 @@
 
       animations = {
         enabled = "yes";
-        bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
-
-        #animation = NAME, ONOFF, SPEED, CURVE [,STYLE]
-
-        #ONOFF может быть равно 0 или 1, 0 - для отключения, 1 - для включения. примечание: если значение равно 0, вы можете опустить дополнительные аргументы.
-
-        #SPEED - это количество секунд (1 секунд = 100 мс), которое займет анимация
-
-        #CURVE - это название кривой Безье, смотрите раздел кривые.
-
-        #STYLE (необязательный) - это стиль анимации
-
+        bezier = "main, 0.39, 0.575, 0.565, 1";
+        
         animation = [
-          "windows, 1, 10, myBezier"
-          "windowsIn, 1, 10, myBezier, popin"
-          "windowsOut, 1, 7, default, popin 80%"
+          "windows, 1, 3, main"
+          "windowsIn, 1, 3.5, main, popin"
+          "windowsOut, 1, 3, main, popin"
+          
           "border, 1, 15, default"
           "borderangle, 1, 10, default"
           "fade, 1, 5, default"
-          # "workspaces, 1, 10, default, slidefade"
-          "workspaces, 1, 12, default, slide"
+          
+          "workspaces, 1, 2.5, main, slidevert"
         ];
       };
 
       windowrulev2 = [
+        "size 382 215,class:(zen-twilight),title:(Картинка в картинке)"
+        "float,class:(zen-twilight),title:(Картинка в картинке)"
+        "pin,class:(zen-twilight),title:(Картинка в картинке)"
+        "size 1070 624,class:(zen-twilight)$,title:(Введите имя файла для сохранения…)"
+        "workspace 2 silent,class:(zen-twilight)"
+        "size 1600 900,class:(zen-twilight)"
+        "float,class:(zen-twilight)"
+        "center,class:(zen-twilight)"
+        "move 1527 813,class:(zen-twilight),title:(Картинка в картинке)"
 
-        # "size 1024 598,class:^(engrampa)$"
-        # "float,class:^(engrampa)$"
-        # "center,class:^(engrampa)$"
-        # "size 1024 598,class:^(Engrampa)$"
-        # "float,class:^(Engrampa)$"
-        # "center,class:^(Engrampa)$"
-
-        "size 382 215,class:^(firefox)$,title:^(Картинка в картинке)$"
-        "float,class:^(firefox)$,title:^(Картинка в картинке)$"
-        "pin,class:^(firefox)$,title:^(Картинка в картинке)$"
-        "size 1070 624,class:^(firefox)$,title:^(Введите имя файла для сохранения…)"
-        "workspace 2 silent,class:^(firefox)$"
-        "size 1600 900,^class:(firefox)$"
-        "float,class:^(firefox)$"
-        "center,class:^(firefox)$"
-        "move 1527 813,class:^(firefox)$,title:^(Картинка в картинке)$"
-        
-        "size 382 215,class:^(zen-twilight)$,title:^(Картинка в картинке)$"
-        "float,class:^(zen-twilight)$,title:^(Картинка в картинке)$"
-        "pin,class:^(zen-twilight)$,title:^(Картинка в картинке)$"
-        "size 1070 624,class:^(zen-twilight)$,title:^(Введите имя файла для сохранения…)"
-        "workspace 2 silent,class:^(zen-twilight)$"
-        "size 1600 900,^class:(zen-twilight)$"
-        "float,class:^(zen-twilight)$"
-        "center,class:^(zen-twilight)$"
-        "move 1527 813,class:^(zen-twilight)$,title:^(Картинка в картинке)$"
-        
         "workspace 8 silent,class:^(org.telegram.desktop)$"
-        "size 505 979,class:^(org.telegram.desktop)$"
-        "move 1395 33,class:^(org.telegram.desktop)$"
-        "float,class:^(org.telegram.desktop)$"
-
         "workspace 8 silent,class:^(vesktop)$"
-        "size 1267 1036,class:^(vesktop)$"
-        "move 72 22,class:^(vesktop)$"
-        # "size 1352 979,class:^(vesktop)$"
-        # "move 21 33,class:^(vesktop)$"
-        # "float,class:^(vesktop)$"
-        
+
         "workspace 9 silent,class:^(steam)$,title:^(Список друзей)$"
         "size 372 979,class:^(steam)$,title:^(Список друзей)$"
         "float,class:^(steam)$,title:^(Список друзей)$"
         "workspace 9 silent,class:^(steam)$"
-        # "size 1473 979,class:^(steam)$"
-        # "move 15 35,class:^(steam)$"
-        # "float,class:^(steam)$"
         "move 1527 35,class:^(steam)$,title:^(Список друзей)$"
-      
+
         "fullscreen,class:^(steam_app_.*)$"
         "monitor 0,class:^(steam_app_.*)$"
-        "workspace 10,class:^(steam_app_.*)$"
+        "workspace 10 silent,class:^(steam_app_.*)$"
       ];
+      
       workspace = [
-        "1, monitor:HDMI-A-1,default:true"
-        "2, monitor:HDMI-A-1,default:true"
-        "3, monitor:HDMI-A-1,default:true"
-        "4, monitor:HDMI-A-1,default:true"
-        "5, monitor:HDMI-A-1,default:true"
-        "6, monitor:HDMI-A-1,default:true"
-        "7, monitor:HDMI-A-1,default:true"
-        "8, monitor:HDMI-A-1,default:true"
-        "9, monitor:HDMI-A-1,default:true"
-        "10, monitor:HDMI-A-1,border:false,rounding:false,default:true"
-        "11, monitor:DP-1,special:true,rounding:false,decorate:false,border:false,gapsin:0,gapsout:0,default:true"
+        "1, monitor:DP-1,default:true"
+        "2, monitor:DP-1,default:true"
+        "3, monitor:DP-1,default:true"
+        "4, monitor:DP-1,default:true"
+        "5, monitor:DP-1,default:true"
+        "6, monitor:DP-1,default:true"
+        "7, monitor:DP-1,default:true"
+        "8, monitor:DP-1,default:true"
+        "9, monitor:DP-1,default:true"
+        "10, monitor:DP-1,border:false,rounding:false,default:true"
+        "11, monitor:HDMI-A-1,special:true,rounding:false,decorate:false,border:false,gapsin:0,gapsout:0,default:true"
       ];
 
       bind = [
         "$mainMod, RETURN, exec, $terminal"
-        "$mainMod, f, exec, $fileManager" 
+        "$mainMod, f, exec, $fileManager"
         "$mainMod, w, exec, $browser"
-        
-        # "$mainMod, D, exec, wofi --show drun"
-        # $mainMod, D, exec, wofi --show drun -c .config/hypr/wofi/config -s .config/hypr/wofi/style.css
-        # "$mainMod, D, exec, rofi -show drun -theme .config/rofi/launcher/style.rasi"
+
         "$mainMod, D, exec, caelestia shell drawers toggle launcher"
-        # "$mainMod Shift, P, exec, ~/.config/rofi/powermenu/powermenu.sh"
         "$mainMod Shift, P, exec, caelestia shell drawers toggle session"
+        
         "ALT, Tab, cyclenext,"
         "ALT, Tab, bringactivetotop,"
 
-        # ", Print, exec, grim - | wl-copy"
-        # "$mainMod Shift, S, exec, grim -g \"$(slurp)\" -t png - | wl-copy -t image/png"
         "$mainMod Shift, S, exec, hyprshot -m region --clipboard-only --freez"
-        
-        
+
         ", code:122, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
         ", code:123, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
 
-        # "$mainMod SHIFT, v, exec, killall .waybar-wrapped; waybar -c .config/waybar/config.jsonc -s .config/waybar/style.css"
-
-        "$mainMod, Q, killactive,"
+        "$mainMod, Q, killactive"
         "$mainMod Shift, Q, exec, hyprctl kill"
-        # "$mainMod Shift, M, exit,"
-        "$mainMod Shift, Space, togglefloating,"
-        "$mainMod Shift, F, fullscreen "
+        "$mainMod Shift, Space, togglefloating"
+        "$mainMod Shift, F, fullscreen"
 
         "$mainMod ALT, right, moveactive, 50 0"
         "$mainMod ALT, left, moveactive, -50 0"

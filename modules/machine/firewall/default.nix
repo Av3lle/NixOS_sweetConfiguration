@@ -1,6 +1,6 @@
 { lib, config, ... }: let
     inherit (lib) mkEnableOption mkOption mkIf;
-    inherit (lib.types) str port listOf;
+    inherit (lib.types) str port listOf bool;
 
     name = "firewall";
     cfg = config.module.${name};
@@ -24,6 +24,12 @@ in {
             description = "Choice interface";
             type = listOf str;
             default = [ ];
+        };
+
+        allowForward = mkOption {
+            description = "Allow Forward";
+            type = bool;
+            default = false;
         };
     };
         
@@ -58,6 +64,10 @@ in {
                 '') (cfg.tcpPorts ++ cfg.udpPorts)}
 
                 iptables -P FORWARD DROP
+                ${lib.optionalString cfg.allowForward ''
+                    iptables -P FORWARD ACCEPT
+                ''}
+            
                 iptables -P OUTPUT ACCEPT
             '';
         };

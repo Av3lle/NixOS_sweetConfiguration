@@ -1,4 +1,8 @@
-{ lib, ...}: {
+{
+    lib,
+    ...
+}:
+{
     allDefaultDir = { dir, exclusions ? [] }:
         let
             dirContents = builtins.readDir dir;
@@ -31,4 +35,5 @@
             (lib.concatMap findDefaultNix subdirPaths);
         in
         findDefaultNix dir;
+
 }

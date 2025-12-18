@@ -28,14 +28,27 @@
                 enable = true;
                 "vm.vfs_cache_pressure" = 100;
                 "vm.max_map_count" = 2147483642;
-                "kernel.split_lock_mitigate" = 0;
             } // lib.optionalAttrs (
                     !mergedSystem.isServer &&
                     !mergedSystem.isLaptop
                 )
             {
-                "kernel.split_lock_mitigate" = "0";
+                "kernel.split_lock_mitigate" = 0;
+                "kernel.nmi_watchdog" = 0;
+                "net.core.netdev_max_backlog" = 4096;
+                # "vm.swappiness" = 30;
             };
+            extraModprobeConfig = lib.mkIf (
+                    !mergedSystem.isServer &&
+                    !mergedSystem.isLaptop
+                )
+            ''
+                blacklist iTCO_wdt
+                blacklist iTCO_vendor_support
+                blacklist sp5100_tco
+            '';
+                
+        
             
             loader = {
                 timeout = 0;
@@ -88,6 +101,10 @@
         };
 
         environment.enableAllTerminfo = true;
+        # xdg.terminal-exec = {
+            # enable = true;
+            # package = pkgs.kitty;
+        # };
         console = {
             earlySetup = true;
             font = "${pkgs.terminus_font}/share/consolefonts/ter-c20b.psf.gz";
@@ -98,7 +115,25 @@
         };
 
         security = {
-            polkit.enable = true;
+            polkit = {
+                enable = true;
+                debug = true;
+                extraConfig = ''
+                    polkit.addRule(function(action, subject) {
+                        if ((
+                            action.id == "org.freedesktop.udisks2.filesystem-mount-system" ||
+                            action.id == "org.freedesktop.udisks2.encrypted-unlock-system"
+                        ) && subject.isInGroup("wheel")) {
+                            return polkit.Result.YES;
+                        }});
+                '';
+            };
+            wrappers.mount_nfs = {
+                source = "${pkgs.nfs-utils}/bin/mount.nfs";
+                owner = "root";
+                group = "root";
+                setuid = true;
+            };
             rtkit.enable = true;
         };
 
@@ -143,7 +178,7 @@
                 };
             };
         };
-        
+
         programs = {
             nm-applet = lib.mkIf (!mergedSystem.isServer) {
                 enable = true;
@@ -165,16 +200,18 @@
             };
         };
 
-        home-manager = lib.mkIf (!mergedSystem.isServer) {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            backupFileExtension = "bak";
-            extraSpecialArgs = {
-                inherit (extraAttrs)
-                    inputs
-                    ;
-                };
-        };
+        
+
+        # home-manager = lib.mkIf (!mergedSystem.isServer) {
+        #     useGlobalPkgs = true;
+        #     useUserPackages = true;
+        #     backupFileExtension = "bak";
+        #     extraSpecialArgs = {
+        #         inherit (extraAttrs)
+        #             inputs
+        #             ;
+        #         };
+        # };
 
         documentation = {
             dev = options.off;
@@ -184,5 +221,17 @@
         };
         
         system.stateVersion = mergedSystem.version;
+    } //
+    lib.optionalAttrs (!mergedSystem.isServer) {
+        home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            backupFileExtension = "bak";
+            extraSpecialArgs = {
+                inherit (extraAttrs)
+                inputs
+                ;
+            };
+        };
     };
 }
