@@ -1,48 +1,38 @@
 {
     config,
-    lib,
-    system,
+    systemConfig,
     pkgs,
     _imports,
+    inputs,
     ...
 }:
 {
     imports = [
         ./hardware-configuration.nix
+        inputs.aagl.nixosModules.default
     ]
     ++ (_imports.allDefaultDir {
         dir = ./system;
         exclusions = [ "quickshell.nix" ];
     });
 
-    # system.modulesTree =
-        # let
-            # kernel = pkgs.linuxPackages_cachyos.kernel;
-        # in
-        # [ (lib.getOutput "modules" kernel) ];
-
-    # specialisation = {
-        # default.configuration = {
-            # boot.kernelPackages = pkgs.linuxPackages_xanmod;
-        # };
-        # vanillaKernel.configuration = {
-            # boot.kernelPackages = pkgs.linuxPackages_latest;
-        # };
-    # };
-   
     boot = {
-        # kernelPackages =
+        kernelPackages =
         # pkgs.linuxPackages_xanmod;
-        # pkgs.linuxPackages_cachyos;
+        pkgs.linuxPackages_cachyos-lts;
         kernelModules = [ "ntsync" ];
     };
 
-    hardware.ksm.enable = true;
-
+    services.xserver.videoDrivers = [ "vmware" ];
+    virtualisation.vmware = {
+        host.enable = true;
+        guest.enable = true;
+    };
     # Winboat
     virtualisation.docker.enable = true;
-    # users.extraGroups.docker.members = [ "username-with-access-to-socket" ];
-    
+
+    programs.anime-game-launcher.enable = true;
+    nix.settings = inputs.aagl.nixConfig;
 
     module = {
         # enable = true;
@@ -59,18 +49,15 @@
             };
             gpu = {
                 enable = true;
-                nvidia = {
-                    enable = true;
-                    package = "latest";
-                };
+                amd.enable = true;
             };
             fstrim.enable = true;
         };
         firewall = {
-            enable = false;
+            enable = true;
             allowForward = true;
-            tcpPorts = [ 25565 67 53 9997 ];
-            udpPorts = [ 25565 67 53 ];
+            tcpPorts = [ 25565 67 53 9997 9090 ];
+            udpPorts = [ 25565 67 53 8080 9090 ];
         };
         ssh = {
             enable = true;
@@ -79,11 +66,17 @@
             fail2ban.enable = true;
         };
 
-        rebuild.enable = true;
-
+        rebuild = {
+            enable = true;
+            nhEnable = true;
+        };
         greetd = {
             enable = true;
             startx = true;
+            autologin = {
+                enable = true;
+                session = "start-hyprland 1> /dev/null";
+            };
         };
 
         gaming = {
@@ -94,14 +87,13 @@
 
         waydroid.enable = true;
         stylix.enable = false;
-        # appimage.enable = lib.mkDefault true;
+        netbird.enable = true;
         zapret.enable = false;
     };
 
     virtualisation.virtualbox.host.enable = true;
     
     services = {
-        xserver.windowManager.openbox.enable = true;
         ananicy = {
             enable = true;
             package = pkgs.ananicy-cpp;
@@ -113,11 +105,15 @@
             openFirewall = true;
             maxInterval = "360m";
         };
-        envfs.enable = true;
+        envfs.enable = false;
     };
 
+    # powerManagement.powerUpCommands = ''
+    #     ${pkgs.hdparm}/sbin/hdparm -S 1 /dev/sdb
+    # ''; 
+
     users = {
-        users.${system.userName} = {
+        users.${systemConfig.userName} = {
             hashedPasswordFile = config.sops.secrets."pc/user/password".path;
             extraGroups = [ "docker" ];
             shell = pkgs.fish;

@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }: let
-    inherit (lib) mkEnableOption mkIf;
-    
+{
+    config,
+    lib,
+    # branchConfig,
+    pkgs,
+    ...
+}:
+let
     name = "hyprland";
     cfg = config.module.desktop.wayland.${name};
-in {
+in
+with lib; {
     imports = [ ./hypr.nix ];
     
     options.module.desktop.wayland.${name} = {
@@ -12,15 +18,13 @@ in {
 
     config = mkIf cfg.enable {
         home.packages = with pkgs; [
-            swww
             hyprshot
-            grim
-            slurp
         ];
 
         wayland.windowManager.hyprland = {
             enable = true;
             package = pkgs._unstable.hyprland;
+                
             xwayland.enable = true;
             settings = {
                 debug = {

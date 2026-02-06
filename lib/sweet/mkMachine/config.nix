@@ -1,7 +1,7 @@
 {
     lib,
     pkgs,
-    mergedSystem,
+    systemConfig,
     options,
     extraAttrs,
     ...
@@ -16,8 +16,8 @@
                 "clocksource=tsc"
                 "preempt=full"
             ] ++ lib.optionals (
-                    !mergedSystem.isServer &&
-                    !mergedSystem.isLaptop
+                    !systemConfig.isServer &&
+                    !systemConfig.isLaptop
                 )
             [
                 "mitigations=off"
@@ -29,18 +29,17 @@
                 "vm.vfs_cache_pressure" = 100;
                 "vm.max_map_count" = 2147483642;
             } // lib.optionalAttrs (
-                    !mergedSystem.isServer &&
-                    !mergedSystem.isLaptop
+                    !systemConfig.isServer &&
+                    !systemConfig.isLaptop
                 )
             {
                 "kernel.split_lock_mitigate" = 0;
                 "kernel.nmi_watchdog" = 0;
                 "net.core.netdev_max_backlog" = 4096;
-                # "vm.swappiness" = 30;
             };
             extraModprobeConfig = lib.mkIf (
-                    !mergedSystem.isServer &&
-                    !mergedSystem.isLaptop
+                    !systemConfig.isServer &&
+                    !systemConfig.isLaptop
                 )
             ''
                 blacklist iTCO_wdt
@@ -65,31 +64,41 @@
             initrd.verbose = false;
             tmp.cleanOnBoot = true;
         };
+
+        hardware = {
+            ksm.enable = true;
+            enableRedistributableFirmware = true;
+        };
+
         systemd.services.NetworkManager-wait-online.enable = false;
         networking = {
-            hostName = mergedSystem.hostName;
+            hostName = systemConfig.hostName;
             networkmanager.enable = true;
             useDHCP = options.on;
         };
 
-        time.timeZone = mergedSystem.timeZone;
+        time.timeZone = systemConfig.timeZone;
         i18n = {
-            defaultLocale = mergedSystem.defaultLocale;
+            defaultLocale = systemConfig.defaultLocale;
             extraLocaleSettings = {
-                LANG = mergedSystem.defaultLocale;
+                LANG = systemConfig.defaultLocale;
             };
         };
         
         nix = {
             settings = {
                 auto-optimise-store = true;
+                stalled-download-timeout = 4;
+                connect-timeout = 4;
                 experimental-features = [
                     "nix-command"
                     "flakes"
                 ];
                 substituters = [
                     "https://cache.nixos.org"
+                    "https://mirror.yandex.ru/nixos"
                     "https://nix-community.cachix.org"
+                    "https://cache.nixos.kz"
                 ];
             };
             optimise.automatic = true;
@@ -101,10 +110,6 @@
         };
 
         environment.enableAllTerminfo = true;
-        # xdg.terminal-exec = {
-            # enable = true;
-            # package = pkgs.kitty;
-        # };
         console = {
             earlySetup = true;
             font = "${pkgs.terminus_font}/share/consolefonts/ter-c20b.psf.gz";
@@ -136,8 +141,15 @@
             };
             rtkit.enable = true;
         };
-
-        services = lib.mkIf (!mergedSystem.isServer) {
+        
+        powerManagement = lib.mkIf (systemConfig.isLaptop) {
+            enable = true;
+            cpuFreqGovernor = "performance";
+        };
+        
+        services = lib.mkIf (!systemConfig.isServer) {
+            upower.enable = lib.mkIf (systemConfig.isLaptop) true;
+            # power-profiles-daemon.enable = lib.mkIf (systemConfig.isLaptop) true;
             devmon.enable = true;
             gvfs.enable = true; 
             udisks2.enable = true;
@@ -180,17 +192,17 @@
         };
 
         programs = {
-            nm-applet = lib.mkIf (!mergedSystem.isServer) {
+            nm-applet = lib.mkIf (!systemConfig.isServer) {
                 enable = true;
                 indicator = true;
             };
 
             nano = options.off;
         };
-        
+
         users = {
             mutableUsers = false;
-            users.${mergedSystem.userName} = {
+            users.${systemConfig.userName} = {
                 isNormalUser = true;
                 extraGroups = [
                     "wheel"
@@ -200,19 +212,6 @@
             };
         };
 
-        
-
-        # home-manager = lib.mkIf (!mergedSystem.isServer) {
-        #     useGlobalPkgs = true;
-        #     useUserPackages = true;
-        #     backupFileExtension = "bak";
-        #     extraSpecialArgs = {
-        #         inherit (extraAttrs)
-        #             inputs
-        #             ;
-        #         };
-        # };
-
         documentation = {
             dev = options.off;
             doc = options.off;
@@ -220,13 +219,14 @@
             nixos = options.off;
         };
         
-        system.stateVersion = mergedSystem.version;
+        system.stateVersion = systemConfig.version;
     } //
-    lib.optionalAttrs (!mergedSystem.isServer) {
+    lib.optionalAttrs (!systemConfig.isServer) {
         home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
             backupFileExtension = "bak";
+            backupCommand = "${pkgs.trash-cli}/bin/trash";
             extraSpecialArgs = {
                 inherit (extraAttrs)
                 inputs

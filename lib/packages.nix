@@ -98,12 +98,16 @@ let
       ) (builtins.readDir (self + "/derivations"));
   };
   overlayList = [
+    overlays.stable
+    overlays.master
+    overlays.prev
+    overlays.unstable
     overlays.customPackages
-  ]
-  ++ lib.optionals (selectedNixpkgs != nixpkgs-stable) [ overlays.stable ]
-  ++ lib.optionals (selectedNixpkgs != nixpkgs-unstable) [ overlays.unstable ]
-  ++ lib.optionals (selectedNixpkgs != nixpkgs-master) [ overlays.master ]
-  ++ lib.optionals (selectedNixpkgs != nixpkgs-prev) [ overlays.prev ];
+  ];
+  # ++ lib.optionals (selectedNixpkgs != nixpkgs-stable) [ overlays.stable ]
+  # ++ lib.optionals (selectedNixpkgs != nixpkgs-unstable) [ overlays.unstable ]
+  # ++ lib.optionals (selectedNixpkgs != nixpkgs-master) [ overlays.master ]
+  # ++ lib.optionals (selectedNixpkgs != nixpkgs-prev) [ overlays.prev ];
 
   pkgs = import selectedNixpkgs {
     inherit

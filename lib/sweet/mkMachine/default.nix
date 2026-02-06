@@ -11,10 +11,15 @@
 }:
 {
     machine ? {},
+    branch ? {},
     system ? {},
     paths ? {}
 }:
 let
+    defaultBranch = {
+        branch = "stable";
+    };
+    
     defaultSystem = {
         hostName = "nixos";
         userName = "sweet";
@@ -28,17 +33,19 @@ let
         isLaptop = false;
     };
 
-    mergedSystem = defaultSystem // system;
+    branchConfig = defaultBranch // branch;
+    systemConfig = defaultSystem // system;
 in
 lib.nixosSystem {
     inherit
         pkgs
         ;
-    system = mergedSystem.platform;
+    system = systemConfig.platform;
     specialArgs = extraAttrs // {
         inherit
             machine
-            system
+            branchConfig
+            systemConfig
             paths
             ;
     };
@@ -49,11 +56,8 @@ lib.nixosSystem {
     ++ (_imports.allDefaultSubdir {
         dir = (self) + /modules/machine;
     })
-    # ++ (_imports.allDefaultSubdir {
-        # dir = (self) + /modules/test;
-    # })
     ++ (withRoot [ "machine/${machine}" ])
-    ++ (lib.optional (!mergedSystem.isServer)
+    ++ (lib.optional (!systemConfig.isServer)
            extraAttrs.inputs.home-manager.nixosModules.default
        )
     ++ [
@@ -67,7 +71,7 @@ lib.nixosSystem {
           inherit
               lib
               pkgs
-              mergedSystem
+              systemConfig
               options
               extraAttrs
               ;

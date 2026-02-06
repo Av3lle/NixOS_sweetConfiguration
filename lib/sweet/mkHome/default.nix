@@ -11,15 +11,28 @@
 }:
 {
     machine ? {},
+    branch ? {},
     system ? {},
     paths ? {},
 }: let
+    defaultBranch = {
+        branch = "stable";
+    };
+    
     defaultSystem = {
         userName = "sweet";
         version = "25.05";
+
+        isLaptop = false;
+    };
+    defaultPaths = {
+        flakeDir = "/etc/nixos";
+        wallpapersDir = "/home/${systemConfig.userName}/.wallpapers";
     };
 
-    mergedSystem = defaultSystem // system;
+    branchConfig = defaultBranch // branch;
+    systemConfig = defaultSystem // system;
+    pathsConfig = defaultPaths // paths;
 in
 lib.homeManagerConfiguration {
     inherit
@@ -28,24 +41,27 @@ lib.homeManagerConfiguration {
     extraSpecialArgs = extraAttrs // {
         inherit
             machine
-            system
-            paths
+            branchConfig
+            systemConfig
+            pathsConfig
             ;
     };
 
-    modules =
-        _imports.allDefaultSubdir {
-        dir = (self) + /modules/home;
-    }
-    ++ (withRoot [ "users/${mergedSystem.userName}" ])
+    modules = withRoot [
+        "users/${systemConfig.userName}"
+    ]
+    ++ (_imports.allDefaultSubdir {
+            dir = (self) + /modules/home;
+    })
     ++ [
         (import ./config.nix {
             inherit
                 pkgs
                 options
-                system
-                mergedSystem
+                systemConfig
+                extraAttrs
+                lib
                 ;
         })
-     ];
+    ];
 }

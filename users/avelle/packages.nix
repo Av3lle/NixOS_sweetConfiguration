@@ -7,10 +7,7 @@
   home = {
     packages =
       (with pkgs; [
-        # Files
         nautilus
-        # libsForQt5.dolphin
-        # kdePackages.ark
         file-roller
         audacious
         mpv
@@ -23,11 +20,13 @@
         obs-studio
         prismlauncher
         (obsidian.override { commandLineArgs = [ "--ozone-platform=wayland" ]; })
-        inputs.zen-browser.packages."x86_64-linux".twilight
+        # inputs.zen-browser.packages."x86_64-linux".twilight
       ])
       ++ (with pkgs._unstable; [
         yandex-music
         qbittorrent
+        # planify
+        todoist-electron
       ]);
   };
 }

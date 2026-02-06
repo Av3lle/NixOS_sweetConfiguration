@@ -13,6 +13,16 @@ with lib; {
     };
 
     config = mkIf cfg.enable {
+        home.sessionVariables = {
+            TERM = "kitty";
+            TERMINAL = "kitty";
+        };
+        xdg.terminal-exec.settings = {
+            default = [
+                kitty.desktop
+            ];
+        };
+        
         programs.kitty = lib.mkForce {
             enable = true;
             settings = {

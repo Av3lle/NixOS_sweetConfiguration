@@ -35,5 +35,4 @@
             (lib.concatMap findDefaultNix subdirPaths);
         in
         findDefaultNix dir;
-
 }

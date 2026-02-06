@@ -1,17 +1,62 @@
-{ lib, config, self, pkgs, paths, machine, system, ... }: let
-    inherit (lib) mkEnableOption mkIf;
-
+{
+    lib,
+    config,
+    self,
+    pkgs,
+    paths,
+    machine,
+    systemConfig,
+    ...
+}:
+let
     name = "rebuild";
     cfg = config.module.${name};
-in {
+in
+with lib; {
     options.module.${name} = {
         enable = mkEnableOption "Enables custom rebuild script";
+
+        nhEnable = mkOption {
+            description = "nh Enable";
+            type = types.bool;
+            default = false;
+        };
     };
 
     config = mkIf cfg.enable {
+        programs.nh = {
+            enable = cfg.nhEnable;
+            flake = paths.flakeDir;
+        };
         environment.systemPackages = with pkgs; [
             (pkgs.writeShellScriptBin "rebuild" ''
                 #!/bin/sh
+
+                notify() {
+                    status="$1"
+                    message="$2"
+                    
+                    case "$status" in
+                        success)
+                            ${pkgs.libnotify}/bin/notify-send "❄️ Nix rebuild" "$message" -i dialog-information -u normal
+                            ;;
+                        error)
+                            ${pkgs.libnotify}/bin/notify-send "❄️ Nix rebuild" "$message" -i dialog-error -u critical
+                            ;;
+                    esac
+                }
+
+                run_with_notify() {
+                    title="$1"
+                    shift
+
+                    if "$@"; then
+                        notify success "✅ $title completed successfully"
+                    else
+                        notify error "❌ $title failed"
+                        return 1
+                    fi
+                }
                 
                 git_commit() {
                     git --git-dir="${paths.flakeDir}/.git" --work-tree="${paths.flakeDir}" add .
@@ -21,24 +66,57 @@ in {
 
                 flake() {
                     cp ${paths.flakeDir}/flake.lock ${paths.flakeDir}/flake.lock.bak
-                    doas nix flake update --flake ${paths.flakeDir} 
+                    run_with_notify "Flake update" \
+                        doas nix flake update --flake ${paths.flakeDir} 
                 }
 
-                nixos() {
-                    nix_boot=$(echo $(readlink -f /run/current-system))
-                    doas nixos-rebuild switch --show-trace --flake ${paths.flakeDir}#${machine} --upgrade 2>&1 |& nom &&
-                    nix_now=$(echo $(readlink -f /nix/var/nix/profiles/system))
-                    nvd diff $nix_boot $nix_now 
-                }
+                ${if cfg.nhEnable then
+                ''
+                    nixos() {
+                        run_with_notify "NixOS rebuild" \
+                            nh os switch -t --hostname ${machine}
+                    }
+                ''
+                else ''
+                    nixos() {
+                        nix_boot=$(readlink -f /run/current-system)
 
-                home_manager() {
-                    profiles=$(echo $(readlink -f /home/${system.userName}/.local/state/nix/profiles/profile))
-                    hm_boot=$profiles
-                    home-manager switch --show-trace --flake ${paths.flakeDir}#${machine} 2>&1 |& nom &&
-                    hm_now=$profiles
-                    nvd diff $hm_boot $hm_now 
-                }
+                        if doas nixos-rebuild switch --show-trace \
+                            --flake ${paths.flakeDir}#${machine} --upgrade 2>&1 |& nom; then
+                                nix_now=$(readlink -f /nix/var/nix/profiles/system)
+                                nvd diff "$nix_boot" "$nix_now"
+                                notify success "NixOS rebuild completed successfully"
+                        else
+                            notify error "NixOS rebuild failed"
+                            return 1
+                        fi
+                    }
+                ''}
 
+                ${if cfg.nhEnable then
+                ''
+                    home_manager() {
+                        run_with_notify "Home Manager rebuild" \
+                            nh home switch -t -b bak -c ${machine}
+                    }
+                ''
+                else ''
+                    home_manager() {
+                        profiles=$(readlink -f /home/${systemConfig.userName}/.local/state/nix/profiles/profile)
+                        hm_boot=$profiles
+
+                        if home-manager switch --show-trace \
+                            --flake ${paths.flakeDir}#${machine} 2>&1 |& nom; then
+                            hm_now=$profiles
+                            nvd diff "$hm_boot" "$hm_now"
+                            notify success "Home Manager rebuild completed successfully"
+                        else
+                            notify error "Home Manager rebuild failed"
+                            return 1
+                        fi
+                    }
+                ''}
+                
                 clear() {
                     nix-env --delete-generations +2 && \
                     home-manager expire-generations +2 generations && \
@@ -53,11 +131,16 @@ in {
                         hm) home_manager ;;
                         clear) clear ;;
                         *)
-                            flake && \
-                            git_commit && \
-                            nixos && \
-                            home_manager && \
-                            clear
+                            if flake &&
+                                git_commit &&
+                                nixos &&
+                                home_manager &&
+                                clear;
+                            then
+                                notify success "Full rebuild completed successfully" dialog-ok
+                            else
+                                notify error "Rebuild stopped due to error" dialog-error
+                            fi
                         ;;
                     esac
                 else

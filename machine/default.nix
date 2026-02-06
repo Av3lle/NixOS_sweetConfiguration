@@ -68,7 +68,6 @@
             gnutar
             xz
             rar
-        ]) ++ (with pkgs._unstable; [
             helix
         ]);
     };

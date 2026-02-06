@@ -1,10 +1,9 @@
 {
     options,
-    system,
-    mergedSystem,
+    systemConfig,
     ...
 }:
-{    
+{
     nixpkgs.config = {
         allowUnfree = true;
         allowUnfreePredicate = (_: true);
@@ -14,12 +13,15 @@
     };
 
     home = {
-        username = system.userName;
-        homeDirectory = "/home/${mergedSystem.userName}";
-        stateVersion = "${mergedSystem.version}";
+        enableNixpkgsReleaseCheck = false;
+
+        username = systemConfig.userName;
+        homeDirectory = "/home/${systemConfig.userName}";
+        stateVersion = "${systemConfig.version}";
     };
 
     news.display = "silent";
+    xdg.configFile."mimeapps.list".force = true;
 
     manual = {
         html = options.off;

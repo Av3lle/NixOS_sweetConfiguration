@@ -1,17 +1,16 @@
 {
-  self,
   config,
+  systemConfig,
+  pathsConfig,
   lib,
   inputs,
   ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf;
-
   name = "caelestia-shell";
   cfg = config.module.desktop.wayland.${name};
 in
-{
+with lib; {
   imports = [ inputs.caelestia-shell.homeManagerModules.default ];
 
   options.module.desktop.wayland.${name} = {
@@ -43,12 +42,16 @@ in
         bar = {
           excludedScreens = [ "HDMI-A-1" ];
           status = {
-            showBattery = false;
+            showBattery = if systemConfig.isLaptop then true else false;
+            showBluetooth = if systemConfig.isLaptop then true else false;
             showNetwork = false;
-            showBluetooth = false;
 
             showKbLayout = true;
             showAudio = true;
+          };
+          tray = {
+            background = true;
+            compact = true;
           };
           scrollActions = {
             brightness = false;
@@ -77,11 +80,11 @@ in
         };
 
         lock.recolourLogo = true;
-        osd.enabled = false;
+        osd.enabled = if systemConfig.isLaptop then true else false;
         session.dragThreshold = 50;
         sidebar.dragThreshold = 5;
 
-        paths.wallpaperDir = "~/Pictures/wallpaper/";
+        paths.wallpaperDir = "${pathsConfig.wallpapersDir}";
       };
       cli = {
         enable = true;

@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }: let
-    inherit (lib) mkEnableOption mkIf;
-    
+{
+    config,
+    branchConfig,
+    lib,
+    pkgs,
+    ...
+}:
+let
     name = "steam";
     cfg = config.module.gaming.${name};
-in {
+in
+with lib; {
     options.module.gaming.${name} = {
         enable = mkEnableOption "Enable module";
     };
@@ -15,7 +21,13 @@ in {
                 remotePlay.openFirewall = true;
 
                 extraCompatPackages = [
-                    (_unstable.proton-ge-bin.override {
+                    proton-cachyos
+                ] ++ lib.optionals (branchConfig != "unstable") [
+                    (pkgs._unstable.proton-ge-bin.override {
+                        steamDisplayName = "_unstable.Proton-GE";
+                    })
+                ] ++ lib.optionals (branchConfig == "unstable") [
+                    (proton-ge-bin.override {
                         steamDisplayName = "_unstable.Proton-GE";
                     })
                 ];
@@ -30,10 +42,10 @@ in {
                         PROTON_USE_NTSYNC = 1;
                         OBS_VKCAPTURE = true;
                     };
-                    # extraLibraries = pkgs: with pkgs; [
-                        # libxkbcommon
-                        # wayland
-                    # ];
+                    extraLibraries = pkgs: with pkgs; [
+                        libxkbcommon
+                        wayland
+                    ];
                 };
             };
         };

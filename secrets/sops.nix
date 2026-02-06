@@ -1,5 +1,15 @@
-{ self, inputs, config, system, pkgs, ... }: {
-    imports = [ inputs.sops-nix.nixosModules.sops ];
+{
+    self,
+    inputs,
+    config,
+    systemConfig,
+    pkgs,
+    ...
+}:
+{
+    imports = [
+        inputs.sops-nix.nixosModules.sops
+    ];
     environment.systemPackages = [ pkgs.sops ];
     sops = {
         defaultSopsFile = "${self}/secrets/secrets.yaml";
@@ -10,7 +20,7 @@
         secrets."pc/user/password" = {
             neededForUsers = true;
             # owner = config.users.users.${config.pc.username}.name;
-            owner = config.users.users.${system.userName}.name;
+            owner = config.users.users.${systemConfig.userName}.name;
         };
 
         secrets."pc/root/password" = {

@@ -1,22 +1,27 @@
-{ config, lib, self, ... }: let
-    inherit (lib) mkEnableOption mkOption mkIf;
-    inherit (lib.types) str attrs;
-    
+{
+    config,
+    lib,
+    self,
+    systemConfig,
+    ...
+}:
+let
     name = "homelab";
     cfg = config.module.${name};
-in {
+in
+with lib; {
     options.module.${name} = {
         enable = mkEnableOption "Enable module";
 
         domain = mkOption {
             description = "domain name";
-            type = str;
+            type = types.str;
             default = "server.com";
         };
 
         sslCert = mkOption {
             description = "path to ssl cert";
-            type = attrs;
+            type = types.attrs;
             default = {
                 sslCertificate = "${self}/secrets/cert.pem";
                 sslCertificateKey = "${self}/secrets/cert.key"; 
@@ -40,5 +45,13 @@ in {
             recommendedTlsSettings = true;
             clientMaxBodySize = "30m";
         };
+
+        virtualisation = {
+            containers.enable = true;
+            oci-containers.backend = "docker";
+            docker.enable = true;
+        };
+
+        users.users.${systemConfig.userName}.extraGroups = [ "docker" ];
     };
 }

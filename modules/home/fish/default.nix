@@ -1,9 +1,15 @@
-{ config, lib, paths, ... }: let
-    inherit (lib) mkEnableOption mkIf;
+{
+    config,
+    lib,
+    pathsConfig,
     
+    ...
+}:
+let
     name = "fish";
     cfg = config.module.${name};
-in {
+in
+with lib; {
     options.module.${name} = {
         enable = mkEnableOption "Enable module";
     };
@@ -19,10 +25,10 @@ in {
             };
             functions = {
                 conf = ''
-                    if test -d "${paths.flakeDir}"
-                        cd "${paths.flakeDir}"
+                    if test -d "${pathsConfig.flakeDir}"
+                        cd "${pathsConfig.flakeDir}"
                     else
-                        echo "Directory not found: ${paths.flakeDir}"
+                        echo "Directory not found: ${pathsConfig.flakeDir}"
                     end
                 '';
             };

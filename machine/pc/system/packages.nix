@@ -1,4 +1,8 @@
-{ inputs, pkgs, ... }:
+{
+    inputs,
+    pkgs,
+    ...
+}:
 {
   imports = with inputs; [
     chaotic.nixosModules.nyx-cache
@@ -10,8 +14,15 @@
     systemPackages =
       (with pkgs; [
         home-manager
+        busybox
         gnome-disk-utility
-        pavucontrol
+        pwvucontrol
+        calibre
+        mesa
+        mesa-demos
+        (writeShellScriptBin "pavucontrol" ''
+          exec pwvucontrol "$@"
+        '')
         libreoffice
         ayugram-desktop
       ])
