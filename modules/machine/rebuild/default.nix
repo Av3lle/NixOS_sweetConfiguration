@@ -13,6 +13,10 @@ let
     cfg = config.module.${name};
 in
 with lib; {
+
+    # find . -type f -not -path '*/\.git/*' -exec chmod 644 {} +
+    # find . -type d -exec chmod 755 {} +
+    
     options.module.${name} = {
         enable = mkEnableOption "Enables custom rebuild script";
 

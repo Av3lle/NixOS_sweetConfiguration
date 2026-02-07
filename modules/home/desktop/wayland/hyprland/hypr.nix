@@ -218,6 +218,8 @@
         "8, monitor:eDP-1,default:true"
         "9, monitor:eDP-1,default:true"
         "10, monitor:eDP-1,border:false,rounding:false,default:true"
+
+        "music, monitor:eDP-1,default:true"
       ];      
     } //
     lib.optionalAttrs (!systemConfig.isLaptop) {
@@ -239,6 +241,8 @@
         "9, monitor:DP-1,default:true"
         "10, monitor:DP-1,border:false,rounding:false,default:true"
         "11, monitor:HDMI-A-1,special:true,rounding:false,decorate:false,border:false,gapsin:0,gapsout:0,default:true"
+
+        "music, monitorDP-1,default:true"
       ];
     };
   };

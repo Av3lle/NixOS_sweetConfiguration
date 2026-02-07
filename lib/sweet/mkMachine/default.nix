@@ -16,25 +16,20 @@
     paths ? {}
 }:
 let
-    defaultBranch = {
-        branch = "stable";
-    };
-    
-    defaultSystem = {
-        hostName = "nixos";
-        userName = "sweet";
-        platform = "x86_64-linux";
-        version = "25.05";
-
-        defaultLocale = "en_US.UTF-8";
-        timeZone = "null";
-
-        isServer = false;
-        isLaptop = false;
+    defaults = import ../common.nix {
+        inherit
+            machine
+            branch
+            system
+            paths
+            ;
     };
 
-    branchConfig = defaultBranch // branch;
-    systemConfig = defaultSystem // system;
+    inherit (defaults)
+        branchConfig
+        systemConfig
+        pathsConfig
+        ;
 in
 lib.nixosSystem {
     inherit

@@ -13,12 +13,6 @@
         dir = ./system;
     });
 
-    virtualisation = {
-        containers.enable = true;
-        oci-containers.backend = "docker";
-        docker.enable = true;
-    };
-
     module = {
         # All modules are located on the path ${self}/modules/...       
         firewall = {
@@ -37,27 +31,49 @@
         homelab = {
             enable = true;
             domain = "avelle.com";
-
-            calibre.enable = true;
-
-            nfs = {
+            
+            reverseProxy = {
                 enable = true;
-                dir = "/mnt/files/nfs";
-                ip = "192.168.1.0/24";
+                defaultMiddlewares = [
+                    "compress"
+                    "secureHeaders"
+                ];
             };
 
-            forgejo = {
-                enable = true;
-            };
+            services = {
+                nfs = {
+                    enable = true;
+                    mediaLocation = "/mnt/files/nfs";
+                    allowedIp = "192.168.1.0/24";
+                };
 
-            immich = {
-                enable = true;
-                mediaLocation = "/mnt/files/immich";
-            };
+                forgejo = {
+                    enable = true;
+                    subdomain = "git";
+                    port = 3000;
+                };
 
-            monitoring = {
-                grafana.enable = true;
-                prometheus.enable = true;
+                calibre = {
+                    enable = true;
+                    port = 3004;
+                    mediaLocation = "/mnt/files/nfs/ebooks:/config/ebooks";
+                };
+                
+                immich = {
+                    enable = true;
+                    port = 2283;
+                    mediaLocation = "/mnt/files/immich";
+                };
+
+                grafana = {
+                    enable = true;
+                    port = 3001;
+                };
+
+                prometheus = {
+                    enable = true;
+                    port = 9999;
+                };
             };
         };
 
@@ -70,34 +86,34 @@
     networking.nameservers = [ "192.168.1.1" ];
 
 
-systemd.services.factorio = {
-    preStart = lib.mkAfter ''
-      MOD_LIST="/var/lib/${config.services.factorio.stateDirName}/mods/mod-list.json"
+    systemd.services.factorio = {
+        preStart = lib.mkAfter ''
+          MOD_LIST="/var/lib/${config.services.factorio.stateDirName}/mods/mod-list.json"
 
-      if [ -f "$MOD_LIST" ]; then
-        ${pkgs.jq}/bin/jq '
-          .mods |= map(
-            if .name == "elevated-rails" or .name == "quality" or .name == "space-age"
-            then .enabled = false
-            else .
-            end
-          )
-        ' "$MOD_LIST" > "$MOD_LIST.tmp" && mv "$MOD_LIST.tmp" "$MOD_LIST"
-        chmod 664 "$MOD_LIST"  # на всякий случай, чтобы factorio мог читать/писать
-      else
-        # Если mod-list.json ещё не существует — создаём минимальный без DLC
-        echo '{
-          "mods": [
-            { "name": "base", "enabled": true },
-            { "name": "elevated-rails", "enabled": false },
-            { "name": "quality", "enabled": false },
-            { "name": "space-age", "enabled": false }
-          ]
-        }' > "$MOD_LIST"
-        chmod 664 "$MOD_LIST"
-      fi
-    '';
-  };
+          if [ -f "$MOD_LIST" ]; then
+            ${pkgs.jq}/bin/jq '
+              .mods |= map(
+                if .name == "elevated-rails" or .name == "quality" or .name == "space-age"
+                then .enabled = false
+                else .
+                end
+              )
+            ' "$MOD_LIST" > "$MOD_LIST.tmp" && mv "$MOD_LIST.tmp" "$MOD_LIST"
+            chmod 664 "$MOD_LIST"  # на всякий случай, чтобы factorio мог читать/писать
+          else
+            # Если mod-list.json ещё не существует — создаём минимальный без DLC
+            echo '{
+              "mods": [
+                { "name": "base", "enabled": true },
+                { "name": "elevated-rails", "enabled": false },
+                { "name": "quality", "enabled": false },
+                { "name": "space-age", "enabled": false }
+              ]
+            }' > "$MOD_LIST"
+            chmod 664 "$MOD_LIST"
+          fi
+        '';
+      };
 
     services.factorio = {
         enable = true;
@@ -108,10 +124,6 @@ systemd.services.factorio = {
         autosave-interval = 3;
 
         saveName = "_autosave3";
-        
-        # admins = [
-            # "av3lle"
-        # ];
     };
     
     users = {

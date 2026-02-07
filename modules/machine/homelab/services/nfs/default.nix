@@ -1,34 +1,20 @@
-{ config, lib, ... }: let
-    inherit (lib) mkEnableOption mkOption mkIf;
-    inherit (lib.types) str;
-    
+{
+    config,
+    lib,
+    ...
+}:
+let
     name = "nfs";
-    cfg = config.module.homelab.${name};
-in {
-    options.module.homelab.${name} = {
-        enable = mkEnableOption "Enable module";
+    cfgH = config.module.homelab;
+    svc = (cfgH.services or {}).${name} or { enable = false; };
+in
+lib.mkIf svc.enable {
+    networking.firewall.allowedTCPPorts = [ 2049 ];
 
-        dir = mkOption {
-            description = "Choice dir in share";
-            type = str;
-            default = "";
-        };
-
-        ip = mkOption {
-            description = "Set ip";
-            type = str;
-            default = "";
-        };
-    };
-
-    config = mkIf cfg.enable {
-        networking.firewall.allowedTCPPorts = [ 2049 ];
-
-        services.${name}.server = {
-            enable = true;
-            exports = ''
-                ${cfg.dir} ${cfg.ip}(rw,sync,no_subtree_check,wdelay,no_root_squash,all_squash)
-            '';
-        };
+    services.${name}.server = {
+        enable = true;
+        exports = ''
+            ${svc.mediaLocation} ${svc.allowedIp}(rw,sync,no_subtree_check,wdelay,no_root_squash,all_squash)
+        '';
     };
 }

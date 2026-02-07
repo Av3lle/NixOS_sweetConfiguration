@@ -14,25 +14,22 @@
     branch ? {},
     system ? {},
     paths ? {},
-}: let
-    defaultBranch = {
-        branch = "stable";
-    };
-    
-    defaultSystem = {
-        userName = "sweet";
-        version = "25.05";
-
-        isLaptop = false;
-    };
-    defaultPaths = {
-        flakeDir = "/etc/nixos";
-        wallpapersDir = "/home/${systemConfig.userName}/.wallpapers";
+}:
+let
+    defaults = import ../common.nix {
+        inherit
+            machine
+            branch
+            system
+            paths
+            ;
     };
 
-    branchConfig = defaultBranch // branch;
-    systemConfig = defaultSystem // system;
-    pathsConfig = defaultPaths // paths;
+    inherit (defaults)
+        branchConfig
+        systemConfig
+        pathsConfig
+        ;
 in
 lib.homeManagerConfiguration {
     inherit
