@@ -37,6 +37,7 @@
                 defaultMiddlewares = [
                     "compress"
                     "secureHeaders"
+                    "websocket"
                 ];
             };
 
@@ -51,6 +52,12 @@
                     enable = true;
                     subdomain = "git";
                     port = 3000;
+                };
+
+                vaultwarden = {
+                    enable = true;
+                    subdomain = "vaultwarden";
+                    port = 8222;
                 };
 
                 calibre = {

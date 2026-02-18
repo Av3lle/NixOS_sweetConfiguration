@@ -1,6 +1,5 @@
 {
   pkgs,
-  inputs,
   ...
 }:
 {
@@ -17,15 +16,14 @@
 
         gnome-clocks
         lutris
+        protonplus
         obs-studio
         prismlauncher
         (obsidian.override { commandLineArgs = [ "--ozone-platform=wayland" ]; })
-        # inputs.zen-browser.packages."x86_64-linux".twilight
       ])
       ++ (with pkgs._unstable; [
         yandex-music
         qbittorrent
-        # planify
         todoist-electron
       ]);
   };

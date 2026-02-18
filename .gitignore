@@ -1,6 +1,0 @@
-.git/
-.sops.yaml
-secrets/secrets.yaml
-secrets/cert.pem
-secrets/cert.key
-flake.lock.bak

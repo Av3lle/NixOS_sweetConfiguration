@@ -36,6 +36,7 @@
 
     module = {
         # enable = true;
+        uutils.enable = true;
         hardware = {
             cpu.amd = {
                 enable = true;
@@ -111,6 +112,10 @@
     # powerManagement.powerUpCommands = ''
     #     ${pkgs.hdparm}/sbin/hdparm -S 1 /dev/sdb
     # ''; 
+    programs.java = {
+        enable = true;
+        package = pkgs.jre25_minimal;
+    };
 
     users = {
         users.${systemConfig.userName} = {

@@ -34,7 +34,7 @@
     };
     # caelestia-shell.url = "github:caelestia-dots/shell/578cd3666edd5315c1e9356c40be6b43635e26ce";
     caelestia-shell.url = "github:caelestia-dots/shell";
-    noctalia.url = "github:noctalia-dev/noctalia-shell";
+    # noctalia.url = "github:noctalia-dev/noctalia-shell";
 
     # programs
     nvf = {

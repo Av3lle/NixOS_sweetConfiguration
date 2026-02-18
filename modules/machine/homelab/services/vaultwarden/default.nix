@@ -14,9 +14,11 @@ lib.mkIf svc.enable {
         dbBackend = "sqlite";
         environmentFile = "/var/lib/${name}/.env";
         config = {
+            DOMAIN = "https://vaultwarden.avelle.com";
             ROCKET_ADDRESS = "127.0.0.1";
             ROCKET_PORT = svc.port or 8222;
-            SIGNUPS_ALLOWED = false;
+            SIGNUPS_ALLOWED = true;
+            WEBSOCKET_ENABLED = true;
         };
     }; 
 }

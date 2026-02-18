@@ -126,6 +126,17 @@ with lib; {
       };
       dynamicConfigOptions.http = mkMerge [{
         middlewares = {
+          websocket = {
+            headers.customRequestHeaders = {
+              X-Forwarded-Proto = "https";
+              X-Forwarded-Ssl = "on";
+              X-Forwarded-For = "{{ .RemoteAddr }}";
+              X-Real-IP = "{{ .RemoteAddr }}";
+            };
+            headers.customResponseHeaders = {
+              Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload";
+            };
+          };
           compress = {
             compress = { };
         };

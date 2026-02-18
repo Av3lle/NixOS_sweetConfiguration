@@ -52,12 +52,16 @@
             loader = {
                 timeout = 0;
                 efi.canTouchEfiVariables = true;
-                grub = {
+                grub = lib.mkIf (systemConfig.bootLoader != "systemd") {
                     enable = true;
                     efiSupport = true;
                     device = "nodev";
                     timeoutStyle = "countdown";
                     configurationLimit = 4;
+                };
+                systemd-boot = lib.mkIf (systemConfig.bootLoader == "systemd") {
+                    enable = true;
+                    configurationLimit = 4;  
                 };
             };
             consoleLogLevel = 0;
@@ -95,10 +99,10 @@
                     "flakes"
                 ];
                 substituters = [
-                    "https://cache.nixos.org"
                     "https://mirror.yandex.ru/nixos"
                     "https://nix-community.cachix.org"
                     "https://cache.nixos.kz"
+                    "https://ncproxy.vizqq.cc"
                 ];
             };
             optimise.automatic = true;
@@ -149,7 +153,6 @@
         
         services = lib.mkIf (!systemConfig.isServer) {
             upower.enable = lib.mkIf (systemConfig.isLaptop) true;
-            # power-profiles-daemon.enable = lib.mkIf (systemConfig.isLaptop) true;
             devmon.enable = true;
             gvfs.enable = true; 
             udisks2.enable = true;

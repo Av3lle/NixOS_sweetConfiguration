@@ -10,6 +10,8 @@ let
     };
     
     defaultSystem = {
+        bootLoader = "systemd";
+        
         hostName = "nixos";
         userName = "sweet";
         platform = "x86_64-linux";

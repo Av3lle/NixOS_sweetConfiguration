@@ -15,6 +15,8 @@
 
   server = {
     system = {
+      bootLoader = "grub";
+      
       hostName = "nixos-server";
       userName = "avelle";
       platform = "x86_64-linux";
@@ -32,6 +34,8 @@
   laptop = {
     branch = "unstable";
     system = {
+      bootLoader = "grub";
+      
       hostName = "nixos-laptop";
       userName = "sweet";
       version = "23.11";

@@ -17,9 +17,6 @@
         busybox
         gnome-disk-utility
         pwvucontrol
-        calibre
-        mesa
-        mesa-demos
         (writeShellScriptBin "pavucontrol" ''
           exec pwvucontrol "$@"
         '')

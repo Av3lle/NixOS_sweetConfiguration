@@ -5,6 +5,13 @@
 }:
 {
 
+# Main
+# /dev/nvme0   512Gb   (system)
+#
+# ZFS Stack 
+# /dev/nvme1   256Gb   (cache L2ARC) 
+# /dev/sda     1Tb     (data_pool)
+    
     boot = {
         initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
         supportedFilesystems = [ "nfs" "zfs" ];
@@ -16,6 +23,7 @@
         kernelParams = [
             "zfs.zfs_arc_min=4294967296"
             "zfs.zfs_arc_max=8589934592"
+            "l2arc_noprefetch=0"
         ];
     };
     networking.hostId = "494a290f";
@@ -34,6 +42,11 @@
         };
 
         # HDD (/dev/sdb)
+        # $ zfs get quota,reservation data_pool
+        # NAME       PROPERTY     VALUE   SOURCE
+        # data_pool  quota        750G    local
+        # data_pool  reservation  150G    local
+        
         # $ zfs get recordsize,primarycache,compression,atime,sync data_pool/data
         # NAME            PROPERTY      VALUE           SOURCE
         # data_pool/data  recordsize    16K             local
@@ -54,10 +67,9 @@
             ];
         };
 
-        # HDD (/dev/sdb)
         # $ zfs get recordsize,primarycache,compression,atime,sync data_pool/other
         # NAME             PROPERTY      VALUE           SOURCE
-        # data_pool/other  recordsize    64K             local
+        # data_pool/other  recordsize    256K            local
         # data_pool/other  primarycache  all             local
         # data_pool/other  compression   lz4             local
         # data_pool/other  atime         off             local
