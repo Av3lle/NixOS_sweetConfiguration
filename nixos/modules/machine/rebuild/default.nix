@@ -69,7 +69,7 @@ with lib; {
                 }
 
                 git_commit_public() {
-                    rsync -a --delete --exclude='.git' ${pathsConfig.flakeDir} ${pathsConfig.flakeDir}/../nixos_github/
+                    rsync -a --delete --exclude='.git' --exclude='.gitignore' --exclude='.sops.yaml' --exclude='flake.lock.bak' --exclude='secrets/cert.key' ${pathsConfig.flakeDir} ${pathsConfig.flakeDir}/../nixos_github/
                     git --git-dir="${pathsConfig.flakeDir}/../nixos_github/.git" --work-tree="${pathsConfig.flakeDir}/../nixos_github" add .
                     git --git-dir="${pathsConfig.flakeDir}/../nixos_github/.git" --work-tree="${pathsConfig.flakeDir}/../nixos_github" commit -m "commit $(date "+%F %H:%M")"
                     git --git-dir="${pathsConfig.flakeDir}/../nixos_github/.git" push -u origin sweet

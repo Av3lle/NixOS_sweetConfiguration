@@ -1,0 +1,6 @@
+secrets/cert.key
+.sops.yaml
+install.sh
+
+flake.lock.bak
+
