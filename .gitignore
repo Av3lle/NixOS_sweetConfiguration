@@ -1,6 +1,4 @@
-secrets/cert.key
+.git/
 .sops.yaml
-install.sh
-
-flake.lock.bak
+secrets/cert.key
 
