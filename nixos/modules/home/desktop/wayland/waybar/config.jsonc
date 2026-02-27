@@ -1,0 +1,155 @@
+{
+  "clock#time": {
+    "format": "  {:%H:%M:%S} ",
+    "interval": 1,
+    "tooltip": false,
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw"
+  },
+  "custom/date": {
+    "exec": "date +\" %e %b\"",
+    "interval": 1,
+    "tooltip": false
+  },
+  "custom/launcher": {
+    "format": "<span font='14'></span> {}",
+    "on-click": "rofi -show drun -theme .config/rofi/launcher/style.rasi",
+    "on-click-right": "~/.config/rofi/powermenu/powermenu.sh",
+    "tooltip": false
+  },
+  "custom/separator": {
+    "format": "<span foreground='#ebdbb2'>|</span>",
+    "interval": 1,
+    "tooltip": false
+  },
+  "height": 1,
+  "hyprland/language": {
+    "format": "󰌌 {}",
+    "format-en": "US",
+    "format-ru": "RU",
+    "interval": 1
+  },
+  "layer": "top",
+  "gtk-layer-shell": true,
+  "modules-center": [
+    // "hyprland/window"
+    "hyprland/workspaces"
+  ],
+  "modules-left": [
+    "custom/launcher",
+    "custom/separator",
+    // "hyprland/workspaces",
+    "pulseaudio",
+    "hyprland/language"
+  ],
+  "modules-right": [
+    "group/expand",
+    "custom/date",
+    "clock#time"
+  ],
+  "position": "bottom",
+  "output": "HDMI-A-1",
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-icons": {
+      "default": [
+        "",
+        "",
+        " "
+      ],
+      "hands-free": " ",
+      "headphone": " ",
+      "headset": " "
+    },
+    "format-muted": " muted",
+    // "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-click": "pavucontrol",
+    "scroll-step": 5
+  },
+  /*
+  "hyprland/workspaces": {
+    "all-outputs": false,
+    "format": "{icon}",
+    "format-icons": {
+      "active": "",
+      "default": "",
+      "urgent": ""
+    },
+    "on-click": "activate",
+    "sort-by-number": true
+  }
+  */
+  /*
+    // Workspaces
+    "hyprland/workspaces" : {
+        "on-click": "activate",
+        "active-only": false,
+        "all-outputs": true,
+        "format": "{}",
+        "format-icons": {
+			"urgent": "",
+			"active": "",
+			"default": ""
+        },
+        "persistent-workspaces": {
+             "*": 10
+        }       
+    }
+    */
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    // "on-click": "~/.config/polybar.old/ws1.sh",
+    "all-outputs": true,
+    "enable-bar-scroll": true,
+    "smooth-scrolling-threshold": 1,
+    // "on-scroll-up": "hyprctl dispatch workspace 1; playerctl pause",
+    // "on-scroll-down": "hyprctl dispatch workspace 1; playerctl pause",
+    "persistent-workspaces": {
+      "1": [],
+      "2": [],
+      "3": [],
+      "8": [],
+      "9": [],
+    },
+    "format-icons": {
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": "",
+      "5": "",
+      "6": "",
+      "7": "",
+      "8": "",
+      "9": "",
+      "10": "",
+      "11": "",
+    }
+  },
+  "tray": {
+    "icon-size": 16,
+    // "rotate": 0c,
+    "spacing": 3
+  },
+  "group/expand": {
+    "orientation": "horizontal",
+    "drawer": {
+      "transition-duration": 600,
+      // "children-class": "minimized",
+      "children-class": "launcher",
+      "transition-left-to-right": false,
+      // "transition-left": "fade",
+      "click-to-reveal": true
+    },
+    "modules": [
+      "custom/menu",
+      "tray"
+    ]
+  },
+  "custom/menu": {
+    "format": "",
+    "tooltip": false
+    // "format-icons": {
+    // "default": "",
+    // }
+  },
+}

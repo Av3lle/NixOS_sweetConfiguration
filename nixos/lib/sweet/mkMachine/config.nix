@@ -1,0 +1,243 @@
+{
+    lib,
+    pkgs,
+    systemConfig,
+    options,
+    extraAttrs,
+    ...
+}:
+{
+    config = {
+        boot = {
+            kernelParams = [
+                "quiet"
+                "splash"
+                "tsc=reliable"
+                "clocksource=tsc"
+                "preempt=full"
+            ] ++ lib.optionals (
+                    !systemConfig.isServer &&
+                    !systemConfig.isLaptop
+                )
+            [
+                "mitigations=off"
+                "split_lock_detect=off"
+            ];
+            
+            kernel.sysctl = {
+                enable = true;
+                "vm.vfs_cache_pressure" = 100;
+                "vm.max_map_count" = 2147483642;
+            } // lib.optionalAttrs (
+                    !systemConfig.isServer &&
+                    !systemConfig.isLaptop
+                )
+            {
+                "kernel.split_lock_mitigate" = 0;
+                "kernel.nmi_watchdog" = 0;
+                "net.core.netdev_max_backlog" = 4096;
+            };
+            extraModprobeConfig = lib.mkIf (
+                    !systemConfig.isServer &&
+                    !systemConfig.isLaptop
+                )
+            ''
+                blacklist iTCO_wdt
+                blacklist iTCO_vendor_support
+                blacklist sp5100_tco
+            '';
+                
+        
+            
+            loader = {
+                timeout = 0;
+                efi.canTouchEfiVariables = true;
+                grub = lib.mkIf (systemConfig.bootLoader != "systemd") {
+                    enable = true;
+                    efiSupport = true;
+                    device = "nodev";
+                    timeoutStyle = "countdown";
+                    configurationLimit = 4;
+                };
+                systemd-boot = lib.mkIf (systemConfig.bootLoader == "systemd") {
+                    enable = true;
+                    configurationLimit = 4;  
+                };
+            };
+            consoleLogLevel = 0;
+            initrd.verbose = false;
+            tmp.cleanOnBoot = true;
+        };
+
+        hardware = {
+            ksm.enable = true;
+            enableRedistributableFirmware = true;
+        };
+
+        systemd.services.NetworkManager-wait-online.enable = false;
+        networking = {
+            hostName = systemConfig.hostName;
+            networkmanager.enable = true;
+            useDHCP = options.on;
+        };
+
+        time.timeZone = systemConfig.timeZone;
+        i18n = {
+            defaultLocale = systemConfig.defaultLocale;
+            extraLocaleSettings = {
+                LANG = systemConfig.defaultLocale;
+            };
+        };
+        
+        nix = {
+            settings = {
+                auto-optimise-store = true;
+                stalled-download-timeout = 4;
+                connect-timeout = 4;
+                experimental-features = [
+                    "nix-command"
+                    "flakes"
+                ];
+                substituters = [
+                    "https://mirror.yandex.ru/nixos"
+                    "https://nix-community.cachix.org"
+                    "https://cache.nixos.kz"
+                ];
+            };
+            optimise.automatic = true;
+            gc = {
+                automatic = true;
+                dates = "weekly";
+                options = "--delete-older-than 3d";
+            };
+        };
+
+        environment.enableAllTerminfo = true;
+        console = {
+            earlySetup = true;
+            font = "${pkgs.terminus_font}/share/consolefonts/ter-c20b.psf.gz";
+            packages = with pkgs; [
+                terminus_font
+            ];
+            keyMap = "us";
+        };
+
+        security = {
+            polkit = {
+                enable = true;
+                debug = true;
+                extraConfig = ''
+                    polkit.addRule(function(action, subject) {
+                        if ((
+                            action.id == "org.freedesktop.udisks2.filesystem-mount-system" ||
+                            action.id == "org.freedesktop.udisks2.encrypted-unlock-system"
+                        ) && subject.isInGroup("wheel")) {
+                            return polkit.Result.YES;
+                        }});
+                '';
+            };
+            wrappers.mount_nfs = {
+                source = "${pkgs.nfs-utils}/bin/mount.nfs";
+                owner = "root";
+                group = "root";
+                setuid = true;
+            };
+            rtkit.enable = true;
+        };
+        
+        powerManagement = lib.mkIf (systemConfig.isLaptop) {
+            enable = true;
+            cpuFreqGovernor = "performance";
+        };
+        
+        services = lib.mkIf (!systemConfig.isServer) {
+            upower.enable = lib.mkIf (systemConfig.isLaptop) true;
+            devmon.enable = true;
+            gvfs.enable = true; 
+            udisks2.enable = true;
+
+            libinput = {
+                enable = true;
+                mouse.accelProfile = "flat";
+            };
+
+            pipewire = {
+                enable = true;
+                alsa.enable = true;
+                alsa.support32Bit = true;
+                pulse.enable = true;
+                jack.enable = true;
+                wireplumber.enable = true;
+                extraConfig = {
+                    pipewire = {
+                        "10-sound" = {
+                            "context.properties" = {
+                                "default.clock.rate" = 48000;
+                                "default.clock.allow-rates" = [ 44100 48000 96000 192000 ];
+                                "default.clock.min-quantum" = 32;
+                                "default.clock.quantum" = 1024;
+                                "default.clock.max-quantum" = 8192;
+                            };
+                        };
+                    };
+                    pipewire-pulse = {
+                        "pulse.properties" = {
+                            "pulse.min.req" = "32/48000";
+                            "pulse.default.req" = "1024/48000";
+                            "pulse.max.req" = "8192/48000";
+                            "pulse.min.quantum" = "32/48000";
+                            "pulse.max.quantum" = "8192/48000";
+                        };
+                        "stream.properties" = {
+                            "node.latency" = "2048/44100";
+                            "resample.quality" = 4;
+                        };
+                    };
+                };
+            };
+        };
+
+        programs = {
+            nm-applet = lib.mkIf (!systemConfig.isServer) {
+                enable = true;
+                indicator = true;
+            };
+
+            nano = options.off;
+        };
+
+        users = {
+            mutableUsers = false;
+            users.${systemConfig.userName} = {
+                isNormalUser = true;
+                extraGroups = [
+                    "wheel"
+                    "networkmanager"
+                ];
+                ignoreShellProgramCheck = true;
+            };
+        };
+
+        documentation = {
+            dev = options.off;
+            doc = options.off;
+            info = options.off;
+            nixos = options.off;
+        };
+        
+        system.stateVersion = systemConfig.version;
+    } //
+    lib.optionalAttrs (!systemConfig.isServer) {
+        home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            backupFileExtension = "bak";
+            backupCommand = "${pkgs.trash-cli}/bin/trash";
+            extraSpecialArgs = {
+                inherit (extraAttrs)
+                inputs
+                ;
+            };
+        };
+    };
+}
