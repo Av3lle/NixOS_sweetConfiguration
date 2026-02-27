@@ -1,4 +1,0 @@
-.git/
-.sops.yaml
-secrets/cert.key
-
