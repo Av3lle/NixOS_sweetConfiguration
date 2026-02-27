@@ -6,10 +6,10 @@
 {
 
 # Main
-# /dev/nvme1   512Gb   (system)
+# /dev/nvme0   512Gb   (system)
 #
 # ZFS Stack 
-# /dev/nvme0   256Gb   (cache L2ARC) 
+# /dev/nvme1   256Gb   (cache L2ARC) 
 # /dev/sda     1Tb     (data_pool)
     
     boot = {

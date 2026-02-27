@@ -22,6 +22,7 @@
         '')
         libreoffice
         ayugram-desktop
+        anydesk
       ])
       ++
 
@@ -34,11 +35,10 @@
         (with pkgs._master; [
           winboat
         ])
-
       ++
 
         (with pkgs._24; [
-          anydesk
+          # anydesk
         ]);
   };
 }

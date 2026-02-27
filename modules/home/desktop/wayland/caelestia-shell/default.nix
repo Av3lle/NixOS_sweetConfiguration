@@ -92,7 +92,7 @@ with lib; {
         sidebar.dragThreshold = 5;
 
         paths = {
-          mediaGif = "${self}/assets/gifs/honeypie.gif";
+          mediaGif = "${self}/assets/gifs/Hello-Kitty.gif";
           sessionGif = "${self}/assets/gifs/Tux.gif";
           wallpaperDir = "${pathsConfig.wallpapersDir}";
         };
