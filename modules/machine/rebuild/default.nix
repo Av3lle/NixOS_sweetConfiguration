@@ -73,7 +73,7 @@ with lib; {
                         --exclude='.git' \
                         --exclude='.gitignore' \
                         --exclude='flake.lock.bak' \
-                        ${pathsConfig.flakeDir} ${pathsConfig.flakeDir}/../nixos_github/
+                        ${pathsConfig.flakeDir}/ ${pathsConfig.flakeDir}/../nixos_github/
                     git --git-dir="${pathsConfig.flakeDir}/../nixos_github/.git" --work-tree="${pathsConfig.flakeDir}/../nixos_github" add .
                     git --git-dir="${pathsConfig.flakeDir}/../nixos_github/.git" --work-tree="${pathsConfig.flakeDir}/../nixos_github" commit -m "commit $(date "+%F %H:%M")"
                     git --git-dir="${pathsConfig.flakeDir}/../nixos_github/.git" push -u origin sweet
