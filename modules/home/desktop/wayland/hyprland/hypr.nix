@@ -123,7 +123,8 @@
 
 
         "match:class yandex-music,workspace special:music silent"
-        "match:class org.telegram.desktop,workspace 8 silent"
+        "match:class Bitwarden,workspace special:private silent"
+        "match:class (com|org).(ayu|tele)gram.desktop,workspace 8 silent"
         "match:class vesktop,workspace 8 silent"
       ];
       
@@ -177,6 +178,7 @@
         "$mainMod, 0, workspace, 10"
         "$mainMod, F1, togglespecialworkspace, music"
         "$mainMod, F2, togglespecialworkspace, social"
+        "$mainMod, F12, togglespecialworkspace, private"
 
         "$mainMod SHIFT, 1, movetoworkspace, 1"
         "$mainMod SHIFT, 2, movetoworkspace, 2"
@@ -242,7 +244,7 @@
         "10, monitor:DP-1,border:false,rounding:false,default:true"
         "11, monitor:HDMI-A-1,special:true,rounding:false,decorate:false,border:false,gapsin:0,gapsout:0,default:true"
 
-        "music, monitorDP-1,default:true"
+        "music, monitor:DP-1,default:true"
       ];
     };
   };

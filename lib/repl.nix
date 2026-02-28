@@ -7,10 +7,16 @@ let
   flakePathStr = toString flakeDir;
   flake = builtins.getFlake flakePathStr;
   nixos = flake.nixosConfigurations.${machine};
-  inherit (nixos) config options;
+  inherit
+    (nixos)
+    config
+    options
+    ;
 in
 nixos // {
-  inherit flake;
+  inherit
+    flake
+    ;
   home = builtins.head (
     builtins.attrValues config.home-manager.users or {}
   ) //
