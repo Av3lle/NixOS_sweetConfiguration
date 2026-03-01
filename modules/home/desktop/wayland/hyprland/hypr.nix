@@ -2,12 +2,10 @@
   lib,
   config,
   systemConfig,
-  # pkgs,
   ...
 }:
 {
   wayland.windowManager.hyprland = {
-    # plugins = [ pkgs._unstable.hyprlandPlugins.hyprscrolling ];
     settings = {
       plugin = {
         hyprscrolling = {
@@ -61,9 +59,9 @@
         "col.inactive_border" = "rgba(1e2327fa)";
 
         layout =
-        # "scrolling";
-        # "dwindle";
-        "master";
+          "scrolling";
+          # "dwindle";
+          # "master";
 
         allow_tearing = false;
       };
@@ -148,23 +146,47 @@
         "$mainMod Shift, F, fullscreen"
         "$mainMod, P, pin"
 
-        "$mainMod ALT, right, moveactive, 50 0"
-        "$mainMod ALT, left, moveactive, -50 0"
-        "$mainMod ALT, up, moveactive, 0 -50"
-        "$mainMod ALT, down, moveactive, 0 50"
+        "CTRL, left, layoutmsg, move -col"
+        "CTRL, right, layoutmsg, move +col"
+        # ------------
+        "CTRL, j, layoutmsg, move -col"
+        "CTRL, code:47, layoutmsg, move +col"
 
-        # "CTRL  ALT, right, layoutmsg, move +col"
-        # "CTRL  ALT, left, layoutmsg, move -col"
+
+        "CTRL SHIFT, left, layoutmsg, swapwol l"
+        "CTRL SHIFT, right, layoutmsg, swapcol r"
+        # ------------
+        "CTRL SHIFT, j, layoutmsg, swapcol l"
+        "CTRL SHIFT, code:47, layoutmsg, swapcol r"
+
+
+        "CTRL ALT, left, layoutmsg, colresize -conf"
+        "CTRL ALT, right, layoutmsg, colresize +conf"
+        # ------------
+        "CTRL ALT, j, layoutmsg, colresize -conf"
+        "CTRL ALT, code:47, layoutmsg, colresize +conf"
+
 
         "$mainMod, left, movefocus, l"
-        "$mainMod, right, movefocus, r"
-        "$mainMod, up, movefocus, u"
         "$mainMod, down, movefocus, d"
+        "$mainMod, up, movefocus, u"
+        "$mainMod, right, movefocus, r"
+        # ------------
+        "$mainMod, j, movefocus, l"
+        "$mainMod, k, movefocus, d"
+        "$mainMod, l, movefocus, u"
+        "$mainMod, code:47, movefocus, r"
+
 
         "$mainMod SHIFT, left, movewindow, l"
         "$mainMod SHIFT, down, movewindow, d"
         "$mainMod SHIFT, up, movewindow, u"
         "$mainMod SHIFT, right, movewindow, r"
+        # ------------
+        "$mainMod SHIFT, j, movewindow, l"
+        "$mainMod SHIFT, k, movewindow, d"
+        "$mainMod SHIFT, l, movewindow, u"
+        "$mainMod SHIFT, code:47, movewindow, r"
 
         "$mainMod, 1, workspace, 1"
         "$mainMod, 2, workspace, 2"

@@ -23,7 +23,8 @@ with lib; {
 
         wayland.windowManager.hyprland = {
             enable = true;
-            package = pkgs._unstable.hyprland;
+            # package = pkgs._unstable.hyprland;
+            package = pkgs._master.hyprland;
                 
             xwayland.enable = true;
             settings = {
