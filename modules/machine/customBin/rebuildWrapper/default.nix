@@ -61,23 +61,6 @@ with lib; {
                         return 1
                     fi
                 }
-                
-                git_commit_private() {
-                    git --git-dir="${pathsConfig.flakeDir}/.git" --work-tree="${pathsConfig.flakeDir}" add .
-                    git --git-dir="${pathsConfig.flakeDir}/.git" --work-tree="${pathsConfig.flakeDir}" commit -m "commit $(date "+%F %H:%M")"
-                    git --git-dir="${pathsConfig.flakeDir}/.git" push -u origin sweet
-                }
-
-                git_commit_public() {
-                    rsync -a --delete \
-                        --exclude='.git' \
-                        --exclude='.gitignore' \
-                        --exclude='flake.lock.bak' \
-                        ${pathsConfig.flakeDir}/ ${pathsConfig.flakeDir}/../nixos_github/
-                    git --git-dir="${pathsConfig.flakeDir}/../nixos_github/.git" --work-tree="${pathsConfig.flakeDir}/../nixos_github" add .
-                    git --git-dir="${pathsConfig.flakeDir}/../nixos_github/.git" --work-tree="${pathsConfig.flakeDir}/../nixos_github" commit -m "commit $(date "+%F %H:%M")"
-                    git --git-dir="${pathsConfig.flakeDir}/../nixos_github/.git" push -u origin sweet
-                }
 
                 flake() {
                     cp ${pathsConfig.flakeDir}/flake.lock ${pathsConfig.flakeDir}/flake.lock.bak
@@ -140,15 +123,13 @@ with lib; {
 
                 if [ -d "${self}" ]; then
                     case "$1" in
-                        git) git_commit_private ;;
-                        gitPublic) git_commit_public ;;
                         flake) flake ;;
                         nix) nixos ;;
                         hm) home_manager ;;
                         clear) clear ;;
                         *)
                             if flake &&
-                                git_commit_private &&
+                                _git &&
                                 nixos &&
                                 home_manager &&
                                 clear;
