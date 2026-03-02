@@ -37,24 +37,18 @@ with lib; {
                     git --git-dir="${pathsConfig.flakeDir}/../nixos_github/.git" push -u origin sweet
                 }
 
-                # if [ -d "${self}" ]; then
-                    case "$1" in
-                        private) git_commit_private ;;
-                        public) git_commit_public ;;
-                        *)
-                            if
-                                git_commit_private &&
-                                git_commit_public;
-                            then
-                                :
-                            fi
-                        ;;
-                    esac
-                # else
-                    # echo "
-                        # This directory could not be found.
-                        # Please check that the path to the directory is correct in the ${pathsConfig.flakeDir}/configuration.nix file."
-                # fi
+                case "$1" in
+                    private) git_commit_private ;;
+                    public) git_commit_public ;;
+                    all) git_commit_private && git_commit_public ;;
+                    *)
+                        if
+                            git_commit_private;
+                        then
+                            :
+                        fi
+                    ;;
+                esac
             '')
         ];   
     };
