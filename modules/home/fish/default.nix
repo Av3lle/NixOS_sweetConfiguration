@@ -2,7 +2,6 @@
     config,
     lib,
     pathsConfig,
-    machine,
     ...
 }:
 let
@@ -20,10 +19,26 @@ with lib; {
             interactiveShellInit = "
                 set -g fish_greeting
             ";
+        
             shellAliases = {
                 sudo = "doas";
             };
+
             functions = {
+                __last_command = ''
+                    set -l cmd $history[1]
+                    if string match -q '*last_command*' $cmd || string match -q '*!!*' $cmd
+                        if test (count $history) -ge 2
+                            eval $history[2]
+                        else
+                            echo "There is no previous team in the history"
+                            return 1
+                        end
+                    else
+                        eval $cmd
+                    end
+                '';
+            
                 conf = ''
                     if test -d "${pathsConfig.flakeDir}"
                         cd "${pathsConfig.flakeDir}"
@@ -31,13 +46,13 @@ with lib; {
                         echo "Directory not found: ${pathsConfig.flakeDir}"
                     end
                 '';
-            
-                nix-repl = let
-                    flakeLibPath = "${pathsConfig.flakeDir}/lib/repl.nix";
-                in ''
-                    nix repl \
-                        --expr "import ${flakeLibPath} { flakeDir = ${pathsConfig.flakeDir}; machine = \"${machine}\"; }"
-                '';
+            };
+
+            shellAbbrs = {
+                "!!" = {
+                    position = "command";
+                    expansion = "__last_command";
+                };
             };
         };
 

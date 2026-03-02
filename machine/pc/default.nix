@@ -67,9 +67,13 @@
             fail2ban.enable = true;
         };
 
-        rebuild = {
-            enable = true;
-            nhEnable = true;
+        customBin = {
+            rebuild = {
+                enable = true;
+                nhEnable = true;
+            };
+            nix-repl.enable = true;
+            gitPush.enable = true;
         };
         greetd = {
             enable = true;
@@ -87,7 +91,6 @@
         };
 
         waydroid.enable = true;
-        stylix.enable = false;
         netbird.enable = true;
         zapret.enable = false;
     };

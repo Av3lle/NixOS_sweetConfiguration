@@ -146,8 +146,8 @@
         "$mainMod Shift, F, fullscreen"
         "$mainMod, P, pin"
 
-        "CTRL, left, layoutmsg, move -col"
-        "CTRL, right, layoutmsg, move +col"
+        # "CTRL, left, layoutmsg, move -col"
+        # "CTRL, right, layoutmsg, move +col"
         # ------------
         "CTRL, j, layoutmsg, move -col"
         "CTRL, code:47, layoutmsg, move +col"

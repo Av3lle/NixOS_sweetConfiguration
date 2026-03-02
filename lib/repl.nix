@@ -9,7 +9,6 @@ let
   nixos = flake.nixosConfigurations.${machine};
   inherit
     (nixos)
-    config
     options
     ;
 in
@@ -17,9 +16,12 @@ nixos // {
   inherit
     flake
     ;
-  home = builtins.head (
-    builtins.attrValues config.home-manager.users or {}
-  ) //
+  home = let
+    hm = flake.homeConfigurations.${machine} or flake.homeConfigurations.nixd or {};
+  in {
+    config = hm.config or {};
+    options = hm.options or {};
+  } //
   {
     options =
       options.home-manager.users.type.getSubOptions [ ] //

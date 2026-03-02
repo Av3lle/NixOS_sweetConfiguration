@@ -16,7 +16,7 @@ with lib; {
   config = mkIf cfg.enable {
     home = {
       sessionVariables = {
-        EDITOR = "helix";
+        EDITOR = "hx";
       };
       packages = with pkgs; [
         nil
