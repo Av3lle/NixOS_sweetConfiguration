@@ -28,7 +28,7 @@ with lib; {
     config = mkIf cfg.enable {
         programs.zen-browser = {
             enable = true;
-            suppressXdgMigrationWarning = true;
+            # suppressXdgMigrationWarning = true;
             profiles.${systemConfig.userName} = {
                 search = {
                     force = true;

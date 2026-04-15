@@ -100,8 +100,8 @@
                 ];
                 substituters = [
                     "https://mirror.yandex.ru/nixos"
-                    "https://nix-community.cachix.org"
-                    "https://cache.nixos.kz"
+                    # "https://nix-community.cachix.org"
+                    # "https://cache.nixos.kz"
                 ];
             };
             optimise.automatic = true;

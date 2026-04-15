@@ -21,13 +21,12 @@ with lib; {
                 remotePlay.openFirewall = true;
 
                 extraCompatPackages = [
-                    proton-cachyos
                 ] ++ lib.optionals (branchConfig != "unstable") [
                     (pkgs._unstable.proton-ge-bin.override {
                         steamDisplayName = "_unstable.Proton-GE";
                     })
                 ] ++ lib.optionals (branchConfig == "unstable") [
-                    (proton-ge-bin.override {
+                    (pkgs.proton-ge-bin.override {
                         steamDisplayName = "_unstable.Proton-GE";
                     })
                 ];

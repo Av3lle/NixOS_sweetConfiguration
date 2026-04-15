@@ -1,5 +1,4 @@
 {
-  lib,
   system,
   selectedNixpkgs,
   nixpkgs-stable ? null,

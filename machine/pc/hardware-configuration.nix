@@ -1,6 +1,7 @@
 {
     config,
     lib,
+    pkgs,
     ...
 }:
 {
@@ -18,6 +19,7 @@
         zfs = {
             # enabled = true;
             # forceImportRoot = false;
+            package = config.boot.kernelPackages.zfs_cachyos;
             forceImportAll = true;
         };
         kernelParams = [

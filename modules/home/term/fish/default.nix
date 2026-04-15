@@ -38,6 +38,20 @@ with lib; {
                         eval $cmd
                     end
                 '';
+
+                __last_last_command = ''
+                    set -l cmd $history[1]
+                    if string match -q '*last_command*' $cmd || string match -q '*!!*' $cmd
+                        if test (count $history) -ge 3
+                            eval $history[3]
+                        else
+                            echo "There is no previous team in the history"
+                            return 1
+                        end
+                    else
+                        eval $cmd
+                    end
+                '';
             
                 conf = ''
                     if test -d "${pathsConfig.flakeDir}"
@@ -52,6 +66,10 @@ with lib; {
                 "!!" = {
                     position = "command";
                     expansion = "__last_command";
+                };
+                "!!!" = {
+                    position = "command";
+                    expansion = "__last_last_command";
                 };
             };
         };

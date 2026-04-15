@@ -15,10 +15,10 @@
         };
       };
       
-      exec-once = [
-        "vesktop"
-        "Telegram"
-      ];
+      # exec-once = [
+        # "vesktop"
+        # "Telegram"
+      # ];
 
       "$mainMod" = "SUPER";
       "$terminal" = "kitty";
@@ -135,6 +135,7 @@
         "ALT, Tab, bringactivetotop,"
 
         "$mainMod Shift, S, exec, hyprshot -m region --clipboard-only --freez"
+        "$mainMod Shift, X, exec, hyprshot -m output -o /home/${systemConfig.userName}/Изображения/Screenshots/ -f $(date '+%F_%H:%M:%S') -s"
 
         ", code:121, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
         ", code:122, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
@@ -153,8 +154,8 @@
         "CTRL, code:47, layoutmsg, move +col"
 
 
-        "CTRL SHIFT, left, layoutmsg, swapwol l"
-        "CTRL SHIFT, right, layoutmsg, swapcol r"
+        # "CTRL SHIFT, left, layoutmsg, swapwol l"
+        # "CTRL SHIFT, right, layoutmsg, swapcol r"
         # ------------
         "CTRL SHIFT, j, layoutmsg, swapcol l"
         "CTRL SHIFT, code:47, layoutmsg, swapcol r"

@@ -9,6 +9,11 @@
     chaotic.nixosModules.nyx-overlay
     chaotic.nixosModules.nyx-registry
   ];
+  
+  nixpkgs.overlays = [
+    inputs.nix-cachyos-kernel.overlays.default
+    inputs.nix-cachyos-kernel.overlays.pinned
+  ];
 
   environment = {
     systemPackages =
@@ -17,23 +22,26 @@
         busybox
         gnome-disk-utility
         pwvucontrol
+        steam-run
         (writeShellScriptBin "pavucontrol" ''
           exec pwvucontrol "$@"
         '')
         libreoffice
         ayugram-desktop
         anydesk
+        darktable
       ])
       ++
 
         (with pkgs._unstable; [
           bitwarden-desktop
           telegram-desktop
+          winboat
         ])
       ++
 
         (with pkgs._master; [
-          winboat
+          # winboat
         ])
       ++
 

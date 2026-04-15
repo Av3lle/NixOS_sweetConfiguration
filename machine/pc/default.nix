@@ -1,4 +1,6 @@
 {
+    lib,
+    self,
     config,
     systemConfig,
     pkgs,
@@ -13,30 +15,38 @@
     ]
     ++ (_imports.allDefaultDir {
         dir = ./system;
-        exclusions = [ "quickshell.nix" ];
+        exclusions = [ ];
     });
 
-    boot = {
-        kernelPackages =
-        # pkgs.linuxPackages_xanmod;
-        pkgs.linuxPackages_cachyos-lts;
-        kernelModules = [ "ntsync" ];
+    specialisation = {
+        noKvm.configuration = {
+            boot.blacklistedKernelModules = [ "kvm" "kvm_amd" ];
+        };
     };
 
-    services.xserver.videoDrivers = [ "vmware" ];
-    virtualisation.vmware = {
-        host.enable = true;
-        guest.enable = true;
+    boot = {
+        kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto;
+        kernelModules = [ "ntsync" "v4l2loopback"];
     };
+
+    security.pki.certificateFiles = [
+        "${self}/secrets/public/server.crt"
+    ];
+
+    nix.settings = {
+        substituters = lib.mkBefore [ "https://cache.avelle.com?priority=1" ];
+        trusted-public-keys = [
+            "cache.avelle.com:0XmjRhWJF9etJZwL1X08kJDD6VyBwr+/x11XDI26Gbo="
+        ];
+    };
+
     # Winboat
     virtualisation.docker.enable = true;
 
+    # aagl
     programs.anime-game-launcher.enable = true;
-    nix.settings = inputs.aagl.nixConfig;
 
     module = {
-        # enable = true;
-        uutils.enable = true;
         hardware = {
             cpu.amd = {
                 enable = true;
@@ -87,12 +97,10 @@
         gaming = {
             enable = true;
             steam.enable = true;
-            lsfg.enable = true;
         };
 
         waydroid.enable = true;
         netbird.enable = true;
-        zapret.enable = false;
     };
 
     virtualisation.virtualbox.host.enable = true;
@@ -109,12 +117,6 @@
             openFirewall = true;
             maxInterval = "360m";
         };
-        envfs.enable = false;
-    };
-
-    programs.java = {
-        enable = true;
-        package = pkgs.jre25_minimal;
     };
 
     users = {

@@ -1,5 +1,6 @@
 {
   pc = {
+    # branch = "unstable";
     system = {
       userName = "avelle";
       platform = "x86_64-linux";

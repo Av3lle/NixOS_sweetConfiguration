@@ -24,8 +24,15 @@ with lib; {
       description = "Paths to SSL certificate and key";
       type = types.attrs;
       default = {
-        certFile = "${self}/secrets/cert.pem";
-        keyFile  = "${self}/secrets/cert.key";
+        # openssl req -x509 -newkey rsa:2048 -nodes -sha256 \
+        #   -days 365 \
+        #   -keyout server.key \
+        #   -out server.crt \
+        #   -subj "/C=RU/ST=ST/L=L/O=avelle/OU=IT/CN=*.avelle.com" \
+        #   -addext "subjectAltName = DNS:*.avelle.com, DNS:avelle.com"
+        
+        certFile = "${self}/secrets/public/server.crt";
+        keyFile  = "${config.sops.secrets."homelab/privateKeySSL".path}";
       };
     };
 
@@ -119,19 +126,41 @@ with lib; {
           };
         };
 
-        tls.certificates = [{
+        tls = {
+          certificates = [{
+            certFile = cfg.sslCert.certFile;
+            keyFile  = cfg.sslCert.keyFile;
+          }];
+          stores = {
+            default = {
+              defaultCertificate = {
+                certFile = cfg.sslCert.certFile;
+                keyFile  = cfg.sslCert.keyFile;
+              };
+            };
+          };
+        };
+      };
+      dynamicConfigOptions.tls = mkMerge [{
+        certificates = [{
           certFile = cfg.sslCert.certFile;
           keyFile  = cfg.sslCert.keyFile;
         }];
-      };
+        stores = {
+          default = {
+            defaultCertificate = {
+              certFile = cfg.sslCert.certFile;
+              keyFile  = cfg.sslCert.keyFile;
+            };
+          };
+        };  
+      }];
       dynamicConfigOptions.http = mkMerge [{
         middlewares = {
           websocket = {
             headers.customRequestHeaders = {
               X-Forwarded-Proto = "https";
               X-Forwarded-Ssl = "on";
-              X-Forwarded-For = "{{ .RemoteAddr }}";
-              X-Real-IP = "{{ .RemoteAddr }}";
             };
             headers.customResponseHeaders = {
               Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload";
@@ -139,21 +168,21 @@ with lib; {
           };
           compress = {
             compress = { };
-        };
+          };
 
-        secureHeaders = {
-          headers = {
-            stsSeconds = 31536000;
-            stsIncludeSubdomains = true;
-            stsPreload = true;
-            forceSTSHeader = true;
-            browserXssFilter = true;
-            contentTypeNosniff = true;
-            frameDeny = true;
-            referrerPolicy = "strict-origin-when-cross-origin";
+          secureHeaders = {
+            headers = {
+              stsSeconds = 31536000;
+              stsIncludeSubdomains = true;
+              stsPreload = true;
+              forceSTSHeader = true;
+              browserXssFilter = true;
+              contentTypeNosniff = true;
+              frameDeny = true;
+              referrerPolicy = "strict-origin-when-cross-origin";
+            };
           };
         };
-      };
       }
       (lib.mkMerge (
         lib.mapAttrsToList (svcName: svcCfg:
