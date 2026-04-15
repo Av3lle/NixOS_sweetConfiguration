@@ -8,6 +8,8 @@
 let
     name = "gitPush";
     cfg = config.module.customBin.${name};
+
+    publicPath = "${pathsConfig.flakeDir}/../nixos_github";
 in
 with lib; {
     options.module.customBin.${name} = {
@@ -30,10 +32,10 @@ with lib; {
                         --exclude='.git' \
                         --exclude='.gitignore' \
                         --exclude='flake.lock.bak' \
-                        ${pathsConfig.flakeDir}/ ${pathsConfig.flakeDir}/../nixos_github/
-                    git --git-dir="${pathsConfig.flakeDir}/../nixos_github/.git" --work-tree="${pathsConfig.flakeDir}/../nixos_github" add .
-                    git --git-dir="${pathsConfig.flakeDir}/../nixos_github/.git" --work-tree="${pathsConfig.flakeDir}/../nixos_github" commit -m "commit $(date "+%F %H:%M")"
-                    git --git-dir="${pathsConfig.flakeDir}/../nixos_github/.git" push -u origin sweet
+                        ${pathsConfig.flakeDir}/ ${publicPath}/
+                    git --git-dir="${publicPath}/.git" --work-tree="${publicPath}" add .
+                    git --git-dir="${publicPath}/.git" --work-tree="${publicPath}" commit -m "commit $(date "+%F %H:%M")"
+                    git --git-dir="${publicPath}/.git" push -u origin sweet
                 }
 
                 case "$1" in
