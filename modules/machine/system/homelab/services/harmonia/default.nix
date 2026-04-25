@@ -7,7 +7,7 @@
     ...
 }:
 let
-    name = "cache";
+    name = "harmonia";
     cfgH = config.module.homelab;
     svc = (cfgH.services or {}).${name} or { enable = false; };
 
@@ -22,6 +22,8 @@ let
         cd ${pathsConfig.flakeDir}
 
         echo "=== Flake update ==="
+        git pull
+        mv flake.lock flake.lock.bak
         nix flake update --commit-lock-file
         git push -u origin sweet
 
