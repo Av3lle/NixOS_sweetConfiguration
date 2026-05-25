@@ -4,21 +4,11 @@
   pathsConfig,
   lib,
   inputs,
-  self,
-  pkgs,
   ...
 }:
 let
   name = "caelestia-shell";
   cfg = config.module.desktop.wayland.${name};
-
-  # material-symbols-caelestia = pkgs.material-symbols.overrideAttrs (attrs: {
-  #   postInstall = ''
-  #     ln -s "$out/share/fonts/TTF/MaterialSymbolsRounded.ttf" "$out/share/fonts/TTF/MaterialSymbolsRounded[FILL,GRAD,opsz,wght].ttf"
-  #     ln -s "$out/share/fonts/TTF/MaterialSymbolsOutlined.ttf" "$out/share/fonts/TTF/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf"
-  #     ln -s "$out/share/fonts/TTF/MaterialSymbolsSharp.ttf" "$out/share/fonts/TTF/MaterialSymbolsSharp[FILL,GRAD,opsz,wght].ttf"
-  #   '';
-  # });
 in
 with lib; {
   imports = [ inputs.caelestia-shell.homeManagerModules.default ];
@@ -28,7 +18,6 @@ with lib; {
   };
 
   config = mkIf cfg.enable {
-    # home.packages = [ material-symbols-caelestia ];
     programs.caelestia = {
       enable = true;
       systemd.enable = true;

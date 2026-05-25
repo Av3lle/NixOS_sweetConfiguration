@@ -27,20 +27,22 @@ in
         services.xserver.videoDrivers = [ "nvidia" ];
 
         hardware.nvidia = {
+            package = config.boot.kernelPackages.nvidiaPackages.${cfg.package};
             modesetting.enable = true;
+            open = true;
+            nvidiaSettings = true;
             powerManagement = {
                 enable = false;
                 finegrained = false;
             };
-            open = true;
-            nvidiaSettings = true;
-            package = config.boot.kernelPackages.nvidiaPackages.${cfg.package};
         };
     
         environment.variables = {
             GBM_BACKEND = "nvidia-drm";
             LIBVA_DRIVER_NAME = "nvidia";
             __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+            __GL_SHADER_DISK_CACHE = "1";
+            __GL_SHADER_DISK_CACHE_SIZE = "12000000000";
         };
 
         environment.systemPackages = with pkgs; [

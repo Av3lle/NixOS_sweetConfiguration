@@ -24,9 +24,33 @@
         };
     };
 
+    virtualisation.libvirtd.enable = true;
+    programs.virt-manager.enable = true;
+
     boot = {
-        kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto;
-        kernelModules = [ "ntsync" "v4l2loopback"];
+        kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-x86_64-v3;
+        kernelModules = [ "ntsync" "v4l2loopback" ];
+
+        # plymouth = {
+        #     enable = true;
+        #     theme = "rings";
+        #     themePackages = with pkgs; [
+        #         # By default we would install all themes
+        #         (adi1090x-plymouth-themes.override {
+        #             selected_themes = [ "rings" ];
+        #         })
+        #     ];
+        # };
+    };
+
+    services.scx = {
+        enable = true;
+        scheduler = "scx_lavd";
+
+        extraArgs = [
+            "--performance"
+            "--no-core-compaction"
+        ];
     };
 
     security.pki.certificateFiles = [
@@ -34,7 +58,7 @@
     ];
 
     nix.settings = {
-        substituters = lib.mkBefore [ "https://cache.avelle.com?priority=1" ];
+        substituters = [ "https://cache.avelle.com?priority=1" ];
         trusted-public-keys = [
             "cache.avelle.com:0XmjRhWJF9etJZwL1X08kJDD6VyBwr+/x11XDI26Gbo="
         ];
@@ -100,17 +124,17 @@
         };
 
         waydroid.enable = true;
-        netbird.enable = true;
+        # netbird.enable = true;
     };
 
-    virtualisation.virtualbox.host.enable = true;
+    # virtualisation.virtualbox.host.enable = true;
     
     services = {
-        ananicy = {
-            enable = true;
-            package = pkgs.ananicy-cpp;
-            rulesProvider = pkgs.ananicy-rules-cachyos;
-        };
+        # ananicy = {
+        #     enable = true;
+        #     package = pkgs.ananicy-cpp;
+        #     rulesProvider = pkgs.ananicy-rules-cachyos;
+        # };
         prometheus.exporters.smartctl = {
             enable = true;
             port = 9997;
@@ -122,7 +146,7 @@
     users = {
         users.${systemConfig.userName} = {
             hashedPasswordFile = config.sops.secrets."pc/user/password".path;
-            extraGroups = [ "docker" ];
+            extraGroups = [ "docker" "libvirtd" ];
             shell = pkgs.fish;
         };
     };

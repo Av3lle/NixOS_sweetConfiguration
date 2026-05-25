@@ -13,8 +13,6 @@
         xfce.ristretto
         xfce.tumbler
         rawtherapee
-
-        gnome-clocks
         lutris
         protonplus
         obs-studio
@@ -24,7 +22,6 @@
       ++ (with pkgs._unstable; [
         yandex-music
         qbittorrent
-        todoist-electron
       ]);
   };
 }

@@ -35,6 +35,7 @@ with lib; {
         environment.variables = {
             RUSTICL_ENABLE = "radeonsi";
             ROC_ENABLE_PRE_VEGA = 1;
+            MESA_SHADER_CACHE_MAX_SIZE = "12G";
         };
     };
 }

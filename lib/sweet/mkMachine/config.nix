@@ -15,6 +15,11 @@
                 "tsc=reliable"
                 "clocksource=tsc"
                 "preempt=full"
+                # "systemd.show_status=auto"
+                # "udev.log_level=3"
+                # "loglevel=3"
+                # "rd.loglevel=3"
+                # "rd.udev.log_level=3"
             ] ++ lib.optionals (
                     !systemConfig.isServer &&
                     !systemConfig.isLaptop

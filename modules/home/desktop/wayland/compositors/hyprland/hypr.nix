@@ -15,15 +15,16 @@
         };
       };
       
-      # exec-once = [
+      exec-once = [
         # "vesktop"
         # "Telegram"
-      # ];
+        "noctalia-shell -d"
+      ];
 
       "$mainMod" = "SUPER";
       "$terminal" = "kitty";
       "$fileManager" = "nautilus";
-      "$browser" = "zen-beta --profile /home/avelle/.zen/avelle";
+      "$browser" = "zen-twilight --profile /home/avelle/.zen/avelle";
 
       xwayland.force_zero_scaling = true;
       ecosystem.no_update_news = true;
@@ -100,15 +101,15 @@
       };
 
       windowrule = [
-        "match:class zen-beta,workspace 2 silent"
-        "match:class zen-beta,size 1600 900"
-        "match:class zen-beta,float on"
-        "match:class zen-beta,center on"
-        "match:class zen-beta,match:title (Картинка в картинке),float on"
-        "match:class zen-beta,match:title (Картинка в картинке),size 691 387"
-        "match:class zen-beta,match:title (Картинка в картинке),move 1847 1031"
-        "match:class zen-beta,match:title (Картинка в картинке),pin on"
-        "match:class zen-beta,match:title (Введите имя файла для сохранения…),size 1070 624"
+        "match:class zen-(beta|twilight),workspace 2 silent"
+        "match:class zen-(beta|twilight),size 1600 900"
+        "match:class zen-(beta|twilight),float on"
+        "match:class zen-(beta|twilight),center on"
+        "match:class zen-(beta|twilight),match:title (Картинка в картинке),float on"
+        "match:class zen-(beta|twilight),match:title (Картинка в картинке),size 691 387"
+        "match:class zen-(beta|twilight),match:title (Картинка в картинке),move 1847 1031"
+        "match:class zen-(beta|twilight),match:title (Картинка в картинке),pin on"
+        "match:class zen-(beta|twilight),match:title (Введите имя файла для сохранения…),size 1070 624"
 
         "match:class net.lutris.Lutris, workspace 9 silent"
         "match:class steam,workspace 9 silent"
@@ -120,7 +121,7 @@
         "match:class steam_app_.*,fullscreen on"
 
 
-        "match:class yandex-music,workspace special:music silent"
+        "match:class electron,match:title (Яндекс Музыка),workspace special:music silent"
         "match:class Bitwarden,workspace special:private silent"
         "match:class (com|org).(ayu|tele)gram.desktop,workspace 8 silent"
         "match:class vesktop,workspace 8 silent"
@@ -217,6 +218,9 @@
       ] ++ lib.optionals (config.module.desktop.wayland.caelestia-shell.enable) [
         "$mainMod, D, exec, caelestia shell drawers toggle launcher"
         "$mainMod Shift, P, exec, caelestia shell drawers toggle session"
+      ] ++ lib.optionals (config.module.desktop.wayland.noctalia-shell.enable) [
+        "$mainMod, D, exec, noctalia-shell ipc call launcher toggle"
+        "$mainMod Shift, P, exec, noctalia-shell ipc call sessionMenu toggle"
       ] ++ lib.optionals (config.module.desktop.wayland.minimalism.enable) [
         "$mainMod, D, exec, anyrun"
       ];

@@ -2,6 +2,7 @@
     systemConfig,
     pkgs,
     _imports,
+    inputs,
     lib,
     config,
     self,
@@ -10,6 +11,8 @@
 {
     imports = [
         ./hardware-configuration.nix
+        ./proxmox.nix
+        inputs.impermanence.nixosModules.impermanence
     ] ++ (_imports.allDefaultDir {
         dir = ./system;
     });
@@ -18,6 +21,15 @@
     security.pki.certificateFiles = [
         "${self}/secrets/public/server.crt"
     ];
+    
+    nix.settings = {
+        substituters = [
+            "https://cache.saumon.network/proxmox-nixos"
+        ];
+        trusted-public-keys = [
+            "proxmox-nixos:D9RYSWpQQC/msZUWphOY2I5RLH5Dd6yQcaHIuug7dWM="
+        ];
+    };
     
     module = {
         # All modules are located on the path ${self}/modules/...       

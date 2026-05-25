@@ -28,13 +28,13 @@ with lib; {
       enable = true;
       package = pkgs.evil-helix;
 
-      themes.stylix = {
-        "ui.background" = {
-          bg = config.stylix.colors.base00;
-        };
-      };
+      # themes.stylix = {
+      #   "ui.background" = {
+      #     bg = config.stylix.colors.base00;
+      #   };
+      # };
       settings = {
-        theme = "stylix";
+        # theme = "stylix";
         editor = {
           line-number = "relative";
           scrolloff = 5;

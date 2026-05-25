@@ -49,6 +49,7 @@
             source-han-sans
             nerd-fonts.jetbrains-mono
             nerd-fonts.iosevka
+            nerd-fonts.caskaydia-cove
             jetbrains-mono
             feather-ttf
         ];
@@ -69,6 +70,7 @@
             xz
             rar
             helix
+            yazi
         ]);
     };
 

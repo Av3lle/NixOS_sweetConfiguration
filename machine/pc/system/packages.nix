@@ -22,7 +22,7 @@
         busybox
         gnome-disk-utility
         pwvucontrol
-        steam-run
+        qemu
         (writeShellScriptBin "pavucontrol" ''
           exec pwvucontrol "$@"
         '')

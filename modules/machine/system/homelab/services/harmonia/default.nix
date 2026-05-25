@@ -69,7 +69,7 @@ lib.mkIf svc.enable {
     systemd.timers.${services-name} = {
         wantedBy = [ "timers.target" ];
         timerConfig = {
-          OnCalendar = "weekly";
+          OnCalendar = "sun";
           RandomizedDelaySec = "45min";
           Persistent = true;
         };

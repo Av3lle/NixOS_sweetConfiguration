@@ -19,12 +19,11 @@
       # url = "github:e-tho/ucodenix";
       # inputs.nixpkgs.follows = "nixpkgs-current";
     # };
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-    };
 
     # system
     # determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
+    sops-nix.url = "github:Mic92/sops-nix";
+    impermanence.url = "github:nix-community/impermanence";
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs-stable";
@@ -36,24 +35,33 @@
     };
 
     
-    dms.url = "github:AvengeMedia/DankMaterialShell";
-    dgop = {
-      url = "github:AvengeMedia/dgop";
+    # dms.url = "github:AvengeMedia/DankMaterialShell";
+    # dgop = {
+    #   url = "github:AvengeMedia/dgop";
+    #   inputs.nixpkgs.follows = "nixpkgs-stable";
+    # };
+    
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
-    caelestia-shell.url = "github:caelestia-dots/shell";
+
+    # caelestia-shell.url = "github:caelestia-dots/shell";
 
     # programs
+    proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
     nvf = {
       url = "github:NotAShelf/nvf";
     };
 
     nixcord.url = "github:kaylorben/nixcord";
+
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     firefox-addons = {
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
+
     aagl = {
       url = "github:ezKEa/aagl-gtk-on-nix";
       inputs.nixpkgs.follows = "nixpkgs-stable";

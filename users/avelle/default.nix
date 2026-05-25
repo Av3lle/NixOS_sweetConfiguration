@@ -1,25 +1,14 @@
 {
     inputs,
-    lib,
+    pathsConfig,
     # pkgs,
     ...
 }:
 {
     imports = [
         ./packages.nix
-        # inputs.dms.homeModules.dank-material-shell
-   ];
-
-  #   programs.dank-material-shell = {
-  #      enable = true;
-  #      dgop.package = pkgs._unstable.dgop;
-  #      # inputs.dgop.packages.${pkgs.system}.default;
-  #        systemd = {
-  #   enable = true;             # Systemd service for auto-start
-  #   restartIfChanged = true;   # Auto-restart dms.service when dank-material-shell changes
-  # };
-    # };
-   
+    ];
+       
     module = {
         fish.enable = true;
         kitty.enable = true;
@@ -36,7 +25,10 @@
             wayland = {
                 enable = true;
                 hyprland.enable = true;
-                caelestia-shell.enable = true;
+                noctalia-shell = {
+                    enable = true;
+                    wal2base16 = true;
+                };
             };
         };
         nixcord.enable = true;

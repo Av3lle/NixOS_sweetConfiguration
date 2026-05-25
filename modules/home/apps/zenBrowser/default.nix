@@ -12,7 +12,7 @@ let
 in
 with lib; {
     imports = [
-        inputs.zen-browser.homeModules.default
+        inputs.zen-browser.homeModules.twilight
     ];
     
     options.module.${name} = {
@@ -28,7 +28,6 @@ with lib; {
     config = mkIf cfg.enable {
         programs.zen-browser = {
             enable = true;
-            # suppressXdgMigrationWarning = true;
             profiles.${systemConfig.userName} = {
                 search = {
                     force = true;
@@ -71,10 +70,10 @@ with lib; {
 
                 containersForce = true;
                 containers = {
-                    "None" = {
-                        color = "purple";
-                        id = 0;
-                    };
+                  # "None" = {
+                      # color = "purple";
+                      # id = 0;
+                  # };
                 };
 
                 spacesForce = true;
@@ -339,7 +338,7 @@ with lib; {
             associations = builtins.listToAttrs (map
             (name: {
                 inherit name;
-                value = "zen-beta.desktop";
+                value = "zen-twilight.desktop";
             }) [
             "application/x-extension-shtml"
             "application/x-extension-xhtml"
