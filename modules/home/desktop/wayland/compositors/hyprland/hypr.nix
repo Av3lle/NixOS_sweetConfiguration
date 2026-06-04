@@ -7,13 +7,13 @@
 {
   wayland.windowManager.hyprland = {
     settings = {
-      plugin = {
-        hyprscrolling = {
-          fullscreen_on_one_column = true;
-          focus_fit_method = 1;
-          explicit_column_widths = "0, 0, 0, 1.0";
-        };
-      };
+      # plugin = {
+        # hyprscrolling = {
+          # fullscreen_on_one_column = true;
+          # focus_fit_method = 1;
+          # explicit_column_widths = "0, 0, 0, 1.0";
+        # };
+      # };
       
       exec-once = [
         # "vesktop"
@@ -180,7 +180,6 @@
         "$mainMod, code:47, movefocus, r"
 
 
-        "$mainMod SHIFT, left, movewindow, l"
         "$mainMod SHIFT, down, movewindow, d"
         "$mainMod SHIFT, up, movewindow, u"
         "$mainMod SHIFT, right, movewindow, r"
@@ -254,6 +253,7 @@
     lib.optionalAttrs (!systemConfig.isLaptop) {
       monitor = [
         "DP-1,2560x1440@240,0x0,1"
+        "DP-2,preferred,auto-right,1,transform,1"
         "HDMI-A-1,1920x1080@60,auto-up,1"
         "Unknown-1,disable"
       ];

@@ -17,6 +17,7 @@
         dir = ./system;
     });
 
+    services.xserver.displayManager.lightdm.enable = false;
 
     security.pki.certificateFiles = [
         "${self}/secrets/public/server.crt"

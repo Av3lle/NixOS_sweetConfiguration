@@ -46,7 +46,7 @@
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
-    # caelestia-shell.url = "github:caelestia-dots/shell";
+    caelestia-shell.url = "github:caelestia-dots/shell";
 
     # programs
     proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
